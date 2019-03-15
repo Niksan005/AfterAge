@@ -2,7 +2,7 @@ const playersData = {};
 var layers = {};
 
 const WizzQcd = 400;
-const WizzWcd = 900;
+const WizzWcd = 800;
 const WizzEcd = 400;
 const WizzRcd = 10;
 const EstunDuration = 50;
@@ -251,6 +251,7 @@ function handleQWERpresses(self, id, playerInput) {
         var player = playersData[id].player;
 
         if (playersData[id].heroType == 'Wizz') {
+            console.log(playersData[id].Istationary);
             if (playerInput.Q && playersData[id].Qcd <= 0 && playersData[id].Istationary == 0) {
                 console.log('Q pressed');
                 playersData[id].Qcd = WizzQcd;

@@ -156,15 +156,30 @@ class GameScene extends Phaser.Scene {
                     var skill = InputData.skill;
                     if (skill == 'Q') {
                         if (InputData.Ion) self.Qskill.anims.play('staticQ', true);
-                        else self.Qskill.anims.play('cdQ', true);
+                        else {
+                            self.Qskill.anims.play('oncd', true);
+                            setTimeout(() => {
+                                Qskill.anims.play('staticQ');
+                            }, 4000);
+                        }
                     }
                     if (skill == 'W') {
-                        self.Wskill.x = InputData.Ion ? 36 + 1 * 67 : - 100;
-                        self.Wskill.y = 540;
+                        if (InputData.Ion) self.Qskill.anims.play('staticW', true);
+                        else {
+                            self.Wskill.anims.play('onLcd', true);
+                            setTimeout(() => {
+                                Wskill.anims.play('staticW');
+                            }, 8000);
+                        }
                     }
                     if (skill == 'E') {
                         if (InputData.Ion) self.Eskill.anims.play('staticE', true);
-                        else self.Eskill.anims.play('cdE', true);
+                        else {
+                            self.Eskill.anims.play('oncd', true);
+                            setTimeout(() => {
+                                Eskill.anims.play('staticE');
+                            }, 4000);
+                        }
                     }
                     if (skill == 'R') {
                         self.Rskill.x = InputData.Ion ? 36 + 3 * 67 : - 100;
@@ -236,10 +251,18 @@ class GameScene extends Phaser.Scene {
     drawHUD(self) {
         self.hud = self.add.image(138, 576 - 36, 'hud').setScrollFactor(0).setDisplaySize(138 * 2, 36 * 2);
         self.Qskill = self.add.sprite(36 + 0 * 67, 540, 'Qskill').setScrollFactor(0).setDisplaySize(64, 64);
+        self.Wskill = self.add.sprite(36 + 1 * 67, 540, 'Wskill').setScrollFactor(0).setDisplaySize(64, 64);
+        self.Eskill = self.add.sprite(36 + 2 * 67, 540, 'Eskill').setScrollFactor(0).setDisplaySize(64, 64);
         self.anims.create({
-            key: 'cdQ',
-            frames: self.anims.generateFrameNumbers('cdpng', { start: 0, end: 8 }),
-            frameRate: 1.25,
+            key: 'oncd',
+            frames: self.anims.generateFrameNumbers('cd', { start: 0, end: 24 }),
+            frameRate: 3.5,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'onLcd',
+            frames: self.anims.generateFrameNumbers('cd', { start: 0, end: 24 }),
+            frameRate: 1.75,
             repeat: -1
         });
         self.anims.create({
@@ -249,14 +272,14 @@ class GameScene extends Phaser.Scene {
             repeat: -1
         });
 
-        self.Wskill = self.add.image(36 + 1 * 67, 540, 'Wskill').setScrollFactor(0).setDisplaySize(64, 64);
-        self.Eskill = self.add.sprite(36 + 2 * 67, 540, 'Eskill').setScrollFactor(0).setDisplaySize(64, 64);
         self.anims.create({
-            key: 'cdE',
-            frames: self.anims.generateFrameNumbers('cdEpng', { start: 0, end: 8 }),
-            frameRate: 1.25,
+            key: 'staticW',
+            frames: self.anims.generateFrameNumbers('Wskill', { start: 0, end: 0 }),
+            frameRate: 1,
             repeat: -1
         });
+
+
         self.anims.create({
             key: 'staticE',
             frames: self.anims.generateFrameNumbers('Eskill', { start: 0, end: 0 }),

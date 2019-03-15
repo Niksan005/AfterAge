@@ -25,8 +25,7 @@ class LoadScene extends Phaser.Scene {
 
 
         this.load.spritesheet('Q', 'assets/sprites/ball.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('cdpng', 'assets/sprites/skillCD.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('cdEpng', 'assets/sprites/skillCDE.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('cd', 'assets/sprites/cooldownSpriteSheet.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('E', 'assets/sprites/E.png', { frameWidth: 100, frameHeight: 100 });
         this.load.image('hud', 'assets/sprites/USED_HUD.png');
         this.load.spritesheet('Qskill', 'assets/sprites/Qskill.png', { frameWidth: 32, frameHeight: 32 });
@@ -42,7 +41,7 @@ class LoadScene extends Phaser.Scene {
         this.bg = this.add.image(16 * 32, 9 * 32, 'background');
         this.startButt = this.add.sprite(16 * 32, 9 * 32, 'startButt')
             .setInteractive()
-            .on('pointerdown', () => this.scene.start(CST.SCENES.GAME))
+            .on('pointerdown', () => this.scene.start(CST.SCENES.GAME, 'Wizz', 'TheNAme'))
             .on('pointerover', () => console.log('Over'));
 
         this.flagRed = this.add.image(80, 15 * 32, 'flagRed');
