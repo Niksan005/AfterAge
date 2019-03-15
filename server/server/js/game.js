@@ -26,22 +26,14 @@ function preload() {
 function create() {
     const self = this;
 
-    /*  this.physics.add.overlap(this.players, this.star, function (star, player) {
-        if (players[player.playerId].team === 'red') {
-          self.scores.red += 10;
-        } else {
-          self.scores.blue += 10;
-        }
-        self.star.setPosition(randomPosition(700), randomPosition(500));
-        io.emit('updateScore', self.scores);
-        io.emit('starLocation', { x: self.star.x, y: self.star.y });
-      });*/
-
     io.on('connection', function (socket) {
         console.log('a user connected');
         var startX = Math.floor(Math.random() * 700) + 50;
         var startY = Math.floor(Math.random() * 500) + 50;
         socket.on('createPlayer', function (name, type, team) {
+            for (var i in playersData) {
+                socket.emit('createPlayer', playersData[i]);
+            }
             playersData[socket.id] = {
                 x: startX,
                 y: startY,
@@ -55,13 +47,12 @@ function create() {
                 MSpeed: 100,
                 player: self.physics.add.sprite(startX, startY, 'ship'),
             };
-            for (var i in playersData) {
-                io.emit('createPlayer', playersData[i]);
-            }
+            io.emit('createPlayer', playersData[socket.id]);
         });
 
         socket.on('disconnect', function () {
             console.log('user disconnected');
+            playersData[socket.id].player.destroy();
             delete playersData[socket.id];
             io.emit('disconnect', socket.id);
         });

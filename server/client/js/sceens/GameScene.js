@@ -40,6 +40,10 @@ class GameScene extends Phaser.Scene {
                 }
             }
         });
+        this.socket.on('disconnect', function (id) {
+            self.players[id].player.destroy();
+            delete playersData[id];
+        });
 
 
 
