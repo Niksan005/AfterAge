@@ -33,24 +33,24 @@ const config = {
 
 
 function preload() {
-    this.load.tilemapTiledJSON('map', 'assets/map/TileMap2.0.json');
-
-    this.load.spritesheet('TilesetFull', 'assets/map/tileset5.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.tilemapTiledJSON('map', 'assets/map/TestMap1.2.json');
+    this.load.spritesheet('TilesetFull', 'assets/map/TilesetFull.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('32x32_map_tile_v1.0', 'assets/map/32x32_map_tile_v1.0.png', { frameWidth: 32, frameHeight: 32 });
     this.load.image('sprite', 'assets/sprites/Aerax.png');
 
 }
 function create() {
     const self = this;
 
-    //this.cameras.main.setBounds(0, 0, 3200, 3200);
-    this.players = this.physics.add.group();//{ collideWorldBounds: true });
+    this.players = this.physics.add.group();
 
-    this.map = this.add.tilemap('map');
-    var TilesetFull = this.map.addTilesetImage('TilesetFull');
-    for (var i = 0; i < this.map.layers.length; i++) {
-        layers[this.map.layers[i].name] = this.map.createStaticLayer(0, TilesetFull, 0, 0);
+    self.map = self.add.tilemap('map');
+    var TilesetFull = self.map.addTilesetImage('TilesetFull');
+    var tileset = self.map.addTilesetImage('32x32_map_tile_v1.0', '32x32_map_tile_v1.0');
+    for (var i = 0; i < self.map.layers.length; i++) {
+        layers[self.map.layers[i].name] = self.map.createDynamicLayer(i, TilesetFull);
+        layers[self.map.layers[i].name + '2'] = self.map.createDynamicLayer(i, tileset);
     }
-
     //layers['Houses'].setCollisionBetween(1, 2000);
     //layers['Trees2'].setCollisionBetween(1, 2000);
 

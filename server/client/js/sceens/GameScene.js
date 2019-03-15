@@ -225,12 +225,13 @@ class GameScene extends Phaser.Scene {
     }
 
     drawLayers(self) {
-        self.map = self.add.tilemap({ key: "map", tileWidth: 32, tileHeight: 32 });
-        var TilesetFull = self.map.addTilesetImage('TilesetFull');
-        for (var i = 1; i < self.map.layers.length; i++) {
-            layers[self.map.layers[i].name] = self.map.createStaticLayer(1, TilesetFull, 0, 0);
+        self.map = self.add.tilemap('map');
+        var TilesetFull = self.map.addTilesetImage('TilesetFull', 'TilesetFull');
+        var tileset = self.map.addTilesetImage('32x32_map_tile_v1.0', '32x32_map_tile_v1.0');
+        for (var i = 0; i < self.map.layers.length; i++) {
+            layers[self.map.layers[i].name] = self.map.createDynamicLayer(i, TilesetFull);
+            layers[self.map.layers[i].name + '2'] = self.map.createDynamicLayer(i, tileset);
         }
-
     }
     drawHUD(self) {
         self.hud = self.add.image(138, 576 - 36, 'hud').setScrollFactor(0).setDisplaySize(138 * 2, 36 * 2);
