@@ -26,8 +26,6 @@ function preload() {
 
 function create() {
 
-
-
     /*  this.physics.add.overlap(this.players, this.star, function (star, player) {
         if (players[player.playerId].team === 'red') {
           self.scores.red += 10;
@@ -46,7 +44,7 @@ function create() {
             x: Math.floor(Math.random() * 700) + 50,
             y: Math.floor(Math.random() * 500) + 50,
             playerId: socket.id,
-            team: (Math.floor(Math.random() * 2) == 0) ? 'red' : 'blue',
+            team: 'red'
 
         };
         addPlayer(self, players[socket.id]);
@@ -65,32 +63,6 @@ function create() {
     });
 }
 
-function update() {
-    this.players.getChildren().forEach((player) => {
-        const input = players[player.playerId].input;
-        if (input.left) {
-            player.setAngularVelocity(-300);
-        } else if (input.right) {
-            player.setAngularVelocity(300);
-        } else {
-            player.setAngularVelocity(0);
-        }
-
-        if (input.up) {
-            this.physics.velocityFromRotation(player.rotation + 1.5, 200, player.body.acceleration);
-        } else {
-            player.setAcceleration(0);
-        }
-
-        players[player.playerId].x = player.x;
-        players[player.playerId].y = player.y;
-        players[player.playerId].rotation = player.rotation;
-    });
-    this.physics.world.wrap(this.players, 5);
-    io.emit('playerUpdates', players);
-}
-
-
 function addPlayer(self, playerInfo) {
     const player = self.physics.add.image(playerInfo.x, playerInfo.y, 'ship').setOrigin(0.5, 0.5).setDisplaySize(53, 40);
     player.setDrag(100);
@@ -98,14 +70,6 @@ function addPlayer(self, playerInfo) {
     player.setMaxVelocity(200);
     player.playerId = playerInfo.playerId;
     self.players.add(player);
-}
-
-function removePlayer(self, playerId) {
-    self.players.getChildren().forEach((player) => {
-        if (playerId === player.playerId) {
-            player.destroy();
-        }
-    });
 }
 
 const game = new Phaser.Game(config);
