@@ -1,5 +1,5 @@
 import { LoadScene } from "./sceens/LoadScene.js";
-import { GameScene } from "./sceens/GameScene.js";
+import { GameScene } from "./sceens/GameScene.js"
 
 var config = {
     type: Phaser.AUTO,

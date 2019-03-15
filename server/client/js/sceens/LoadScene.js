@@ -6,24 +6,35 @@ class LoadScene extends Phaser.Scene {
             key: CST.SCENES.LOAD
         })
     }
-    create() {
-        console.log('LoadSceneHere');
-    }
     preload() { // Loading All Assets That Are Used
 
 
-        this.load.tilemapTiledJSON('map', 'assets/map/TileMap1.0.json');
-        this.load.spritesheet('TilesetFull', 'assets/map/tileset4.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.tilemapTiledJSON('map', 'assets/map/TileMap2.0.json');
+        this.load.spritesheet('tiles', 'assets/map/tileset4.png', { frameWidth: 32, frameHeight: 32 });
 
 
-        this.load.image('Select', 'assets/sprites/loadingScreen/Selected.png')
-        this.load.image('backgroun', 'assets/sprites/loadingScreen/bg.png');
+        //this.load.image('Select', 'assets/sprites/loadingScreen/Selected.png')
+        //this.load.image('backgroun', 'assets/sprites/loadingScreen/bg.png');
         this.load.image('startButt', 'assets/sprites/loadingScreen/startButton.png');
 
         this.load.image('flagRed', 'assets/sprites/loadingScreen/flagRed.png');
         this.load.image('flagBlue', 'assets/sprites/loadingScreen/flagBlue.png');
         this.load.image('flagGreen', 'assets/sprites/loadingScreen/flagGreen.png');
         this.load.image('flagYellow', 'assets/sprites/loadingScreen/flagYellow.png');
+
+
+        this.load.spritesheet('Q', 'assets/sprites/ball.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('cdpng', 'assets/sprites/skillCD.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('cdEpng', 'assets/sprites/skillCDE.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('E', 'assets/sprites/E.png', { frameWidth: 100, frameHeight: 100 });
+        this.load.image('hud', 'assets/sprites/USED_HUD.png');
+        this.load.spritesheet('Qskill', 'assets/sprites/Qskill.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.image('Wskill', 'assets/sprites/Wskill.png');
+        this.load.spritesheet('Eskill', 'assets/sprites/Eskill.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.image('Rskill', 'assets/sprites/Rskill.png');
+
+
+        this.load.spritesheet('sprite', 'assets/sprites/AeraxSpriteSheet.png', { frameWidth: 50, frameHeight: 50 });
 
     }
     create() {
