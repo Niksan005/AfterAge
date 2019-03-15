@@ -1,11 +1,11 @@
 
-const players = {};
+const playersData = {};
 
 const config = {
     type: Phaser.HEADLESS,
     parent: 'phaser-example',
-    width: 800,
-    height: 600,
+    width: 24 * 32,
+    height: 17 * 32,
     physics: {
         default: 'arcade',
         arcade: {
@@ -20,11 +20,11 @@ const config = {
     },
     autoFocus: false
 };
-
 function preload() {
 }
 
 function create() {
+    const self = this;
 
     /*  this.physics.add.overlap(this.players, this.star, function (star, player) {
         if (players[player.playerId].team === 'red') {
@@ -39,21 +39,30 @@ function create() {
 
     io.on('connection', function (socket) {
         console.log('a user connected');
-        players[socket.id] = {
-            rotation: 0,
-            x: Math.floor(Math.random() * 700) + 50,
-            y: Math.floor(Math.random() * 500) + 50,
-            playerId: socket.id,
-            team: 'red'
-
-        };
-        addPlayer(self, players[socket.id]);
-        socket.emit('currentPlayers', players);;
+        var startX = Math.floor(Math.random() * 700) + 50;
+        var startY = Math.floor(Math.random() * 500) + 50;
+        socket.on('createPlayer', function (name, type, team) {
+            playersData[socket.id] = {
+                x: startX,
+                y: startY,
+                endX: startX,
+                endY: startY,
+                playerId: socket.id,
+                team: team,
+                name: name,
+                type: type,
+                hp: 100,
+                MSpeed: 100,
+                player: self.physics.add.sprite(startX, startY, 'ship'),
+            };
+            for (var i in playersData) {
+                io.emit('createPlayer', playersData[i]);
+            }
+        });
 
         socket.on('disconnect', function () {
             console.log('user disconnected');
-            removePlayer(self, socket.id);
-            delete players[socket.id];
+            delete playersData[socket.id];
             io.emit('disconnect', socket.id);
         });
 
@@ -63,14 +72,8 @@ function create() {
     });
 }
 
-function addPlayer(self, playerInfo) {
-    const player = self.physics.add.image(playerInfo.x, playerInfo.y, 'ship').setOrigin(0.5, 0.5).setDisplaySize(53, 40);
-    player.setDrag(100);
-    player.setAngularDrag(100);
-    player.setMaxVelocity(200);
-    player.playerId = playerInfo.playerId;
-    self.players.add(player);
-}
+function update() { }
+
 
 const game = new Phaser.Game(config);
 window.gameLoaded();
