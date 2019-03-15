@@ -10,6 +10,12 @@ class LoadScene extends Phaser.Scene {
         console.log('LoadSceneHere');
     }
     preload() { // Loading All Assets That Are Used
+
+
+        this.load.tilemapTiledJSON('map', 'assets/map/TileMap1.0.json');
+        this.load.spritesheet('TilesetFull', 'assets/map/tileset4.png', { frameWidth: 32, frameHeight: 32 });
+
+
         this.load.image('Select', 'assets/sprites/loadingScreen/Selected.png')
         this.load.image('backgroun', 'assets/sprites/loadingScreen/bg.png');
         this.load.image('startButt', 'assets/sprites/loadingScreen/startButton.png');

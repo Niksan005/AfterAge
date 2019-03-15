@@ -66,14 +66,39 @@ function create() {
             io.emit('disconnect', socket.id);
         });
 
-        socket.on('playerInput', function (inputData) {
-            handlePlayerInput(self, socket.id, inputData);
+        socket.on('movePlayer', function (inputData) {
+            if (playersData[socket.id]) {
+                playersData[socket.id].endX = inputData.x;
+                playersData[socket.id].endY = inputData.y;
+                handlePlayerInput(self, socket.id, inputData);
+            }
+        });
+
+
+        socket.on('pressedQWER', function (inputData) {
+            //handleQWERpresses(self, socket.id, inputData);
         });
     });
 }
 
-function update() { }
+function update() {
+
+    for (var i in playersData) {
+        var player = playersData[i];
+        if (Phaser.Math.Distance.Between(player.player.x, player.player.y, player.endX, player.endY) < 5) {
+            player.player.setVelocityX(0);
+            player.player.setVelocityY(0);
+        }
+        playersData[i].x = playersData[i].player.x;
+        playersData[i].y = playersData[i].player.y;
+    }
+
+    io.emit('playerUpdates', playersData);
+}
 
 
+function handlePlayerInput(self, playerId, input) {
+    self.physics.moveToObject(playersData[playerId].player, { x: playersData[playerId].endX, y: playersData[playerId].endY }, playersData[playerId].MSpeed);
+}
 const game = new Phaser.Game(config);
 window.gameLoaded();
