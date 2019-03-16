@@ -139,6 +139,9 @@ function update() {
             if (playersData[player.playerId].MSpeed == 100) {
                 playersData[player.playerId].lastMoved = 'static';
             } else {
+                playersData[player.playerId].x = player.x;
+                playersData[player.playerId].y = player.y;
+
                 playersData[player.playerId].lastMoved = 'Wstatic';
             }
         }
@@ -189,6 +192,8 @@ function update() {
         if (Phaser.Math.Distance.Between(Qs[i].ball.x, Qs[i].ball.y, Qs[i].endX, Qs[i].endY) < 5) {
             removeQ(i);
         }
+
+
         //console.log(Qs[i].ball.x + ' : ' + Qs[i].ball.y + ' -- ' + Qs[i].endX + ' : ' + Qs[i].endY);
     }
 

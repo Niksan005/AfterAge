@@ -73,22 +73,33 @@ class GameScene extends Phaser.Scene {
             }
         });
         this.socket.on('playerUpdates', function (players) {
-            if (ShouldListen) {
-                Object.keys(players).forEach(function (id) {
-                    self.players.getChildren().forEach(function (player) {
-                        if (players[id] && players[id].playerId === player.playerId) {
-                            player.setPosition(Math.round(players[id].x), Math.round(players[id].y));
-                            player.nameText.setPosition(player.x - 25, player.y - 40);
+            /*if (ShouldListen) {
+                if (self.players[player.playerId]) {
+                    self.players[player.playerId].player.setPosition(Math.round(players[id].x), Math.round(players[id].y));
+                    self.players[player.playerId].player.nameText.setPosition(player.x - 25, player.y - 40);
 
-                            player.HP.setPosition(player.x - 25, player.y - 28);
+                    self.players[player.playerId].player.HP.setPosition(self.players[player.playerId].player.x - 25, self.players[player.playerId].player.y - 28);
 
-                            if (player.anims.currentAnim.key != players[id].lastMoved) {
-                                player.anims.play(players[id].lastMoved);
-                            }
+                    if (self.players[player.playerId].player.anims.currentAnim.key != self.players[player.playerId].lastMoved) {
+                        self.players[player.playerId].player.anims.play(players[player.playerId].lastMoved);
+                    }
+                }
+            }*/
+            Object.keys(players).forEach(function (id) {
+                self.players.getChildren().forEach(function (player) {
+                    if (players[id] && players[id].playerId === player.playerId) {
+                        player.setPosition(Math.round(players[id].x), Math.round(players[id].y));
+                        player.nameText.setPosition(player.x - 25, player.y - 40);
+
+                        player.HP.setPosition(player.x - 25, player.y - 28);
+
+                        if (player.anims.currentAnim.key != players[id].lastMoved) {
+                            player.anims.play(players[id].lastMoved);
                         }
-                    });
+                    }
                 });
-            }
+            });
+
         });
 
         this.socket.on('updateHP', function (playerInfo) {
