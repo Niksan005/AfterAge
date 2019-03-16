@@ -104,7 +104,19 @@ class GameScene extends Phaser.Scene {
                     }
                 });
             });
+            /*
+            for (var i in players) {
+                if (self.players[i]) {
+                    self.players[i].setPosition(Math.round(players[i].x), Math.round(players[i].y));
+                    self.players[i].nameText.setPosition(players[i].x - 25, players[i].y - 40);
 
+                    self.players[i].HP.setPosition(player[i].x - 25, player[i].y - 28);
+
+                    if (self.players[i].anims.currentAnim.key != players[i].lastMoved) {
+                        self.players[i].anims.play(players[i].lastMoved);
+                    }
+                }
+            }*/
         });
 
         this.socket.on('updateHP', function (playerInfo) {

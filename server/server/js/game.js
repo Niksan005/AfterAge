@@ -1,4 +1,5 @@
 const playersData = {};
+const XY = {};
 var layers = {};
 
 const WizzQcd = 400;
@@ -65,6 +66,13 @@ function create() {
             // create a new player and add it to our players object
             var startX = Math.floor(Math.random() * 1400) + 600;
             var startY = Math.floor(Math.random() * 1400) + 600;
+
+            XY[socket.id] = {
+                x: startX,
+                y: startY,
+                playerId: socket.id,
+                lastMoved: 'static',
+            };
             playersData[socket.id] = {
                 x: startX,
                 y: startY,
@@ -148,6 +156,8 @@ function update() {
             } else {
                 playersData[player.playerId].x = player.x;
                 playersData[player.playerId].y = player.y;
+                XY[player.playerId].x = player.x;
+                XY[player.playerId].y = player.y;
 
                 playersData[player.playerId].lastMoved = 'Wstatic';
                 if (playersData[player.playerId].InR) {
@@ -175,6 +185,10 @@ function update() {
         }
         playersData[player.playerId].x = player.x;
         playersData[player.playerId].y = player.y;
+
+        XY[player.playerId].x = player.x;
+        XY[player.playerId].y = player.y;
+        XY[player.playerId].lastMoved = playersData[player.playerId].lastMoved;
     });
     for (var i = 0; i < QsBR; i += 1) {
         this.players.getChildren().forEach((player) => {
@@ -202,10 +216,10 @@ function update() {
 }
 
 function UpdateXYToPlayers() {
-    io.emit('playerUpdates', playersData);
+    io.emit('playerUpdates', XY);
     setTimeout(() => {
         UpdateXYToPlayers();
-    }, 50);
+    }, 10);
 }
 
 
@@ -317,7 +331,7 @@ function handleQWERpresses(self, id, playerInput) {
                 setTimeout(function () { if (playersData[id]) resetMSpeed(playersData[id]); }, 5000);
                 console.log('set');
 
-                io.emit('playerUpdates', playersData[id]);
+                io.emit('playerUpdates', XY);
             }
             if (playerInput.E && playersData[id].Ecd <= 0 && playersData[id].Istationary == 0) {
                 console.log('E pressed');
