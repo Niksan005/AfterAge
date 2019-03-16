@@ -107,6 +107,11 @@ class GameScene extends Phaser.Scene {
 
         this.socket.on('upLeaderB', function (players) {
 
+            leaderBID[0] = 0;
+            leaderBID[1] = 0;
+            leaderBID[2] = 0;
+            leaderBID[3] = 0;
+            leaderBID[4] = 0;
             Object.keys(players).forEach(function (id) {
                 self.players.getChildren().forEach(function (player) {
                     if (players[id] && players[id].playerId === player.playerId) {
