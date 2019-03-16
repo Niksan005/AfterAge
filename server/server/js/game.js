@@ -421,9 +421,9 @@ function dealEdmg(self, id, wx, wy) {
                     io.emit('disconnect', player.playerId);
                     removePlayer(self, player.playerId);
                     delete playersData[player.playerId];
-                    playersData[player.playerId].kills++;
-                    XY[player.playerId].kills = playersData[player.playerId].kills;
 
+                    playersData[id].kills++;
+                    XY[id].kills = playersData[id].kills;
                     io.emit('upLeaderB', XY);
                 }
             }
