@@ -127,6 +127,7 @@ function create() {
                 removePlayer(self, socket.id);
                 delete playersData[socket.id];
                 io.emit('disconnect', socket.id);
+                io.emit('upLeaderB', XY);
             }
         });
 
@@ -197,7 +198,6 @@ function update() {
         XY[player.playerId].y = player.y;
         XY[player.playerId].lastMoved = playersData[player.playerId].lastMoved;
         XY[player.playerId].kills = playersData[player.playerId].kills;
-
     });
     for (var i = 0; i < QsBR; i += 1) {
         this.players.getChildren().forEach((player) => {
@@ -259,6 +259,7 @@ function newFunction(player1, self, player2) {
             io.emit('disconnect', player1.playerId);
             removePlayer(self, player1.playerId);
             delete playersData[player1.playerId];
+            io.emit('upLeaderB', XY);
             playersData[player2.playerId].hp += Math.round(Math.random() * 100);
             playersData[player2.playerId].kills++;
             if (playersData[player2.playerId].hp > 100)
@@ -413,6 +414,7 @@ function dealEdmg(self, id, wx, wy) {
                     removePlayer(self, player.playerId);
                     delete playersData[player.playerId];
                     playersData[player.playerId].kills++;
+                    io.emit('upLeaderB', XY);
                 }
             }
         }

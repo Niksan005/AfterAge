@@ -78,12 +78,6 @@ class GameScene extends Phaser.Scene {
             }
         });
         this.socket.on('playerUpdates', function (players) {
-            var leaderBID = [];
-            leaderBID[0] = 0;
-            leaderBID[1] = 0;
-            leaderBID[2] = 0;
-            leaderBID[3] = 0;
-            leaderBID[4] = 0;
 
             Object.keys(players).forEach(function (id) {
                 self.players.getChildren().forEach(function (player) {
@@ -98,6 +92,23 @@ class GameScene extends Phaser.Scene {
                             player.anims.play(players[id].lastMoved);
                             console.log(players[id].lastMoved);
                         }
+                    };
+                });
+            });
+        });
+
+
+        this.socket.on('playerUpdates', function (players) {
+            var leaderBID = [];
+            leaderBID[0] = 0;
+            leaderBID[1] = 0;
+            leaderBID[2] = 0;
+            leaderBID[3] = 0;
+            leaderBID[4] = 0;
+
+            Object.keys(players).forEach(function (id) {
+                self.players.getChildren().forEach(function (player) {
+                    if (players[id] && players[id].playerId === player.playerId) {
                         if (leaderBID[0] == 0 || (players[id].kills > players[leaderBID[0]] && id != leaderBID[0])) {
                             leaderBID[4] = leaderBID[3];
                             leaderBID[3] = leaderBID[2];
