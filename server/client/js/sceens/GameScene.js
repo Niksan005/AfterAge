@@ -115,25 +115,25 @@ class GameScene extends Phaser.Scene {
             Object.keys(players).forEach(function (id) {
                 self.players.getChildren().forEach(function (player) {
                     if (players[id] && players[id].playerId === player.playerId) {
-                        if (leaderBID[0] == 0 || (players[id].kills > players[leaderBID[0]] && id != leaderBID[0])) {
+                        if (leaderBID[0] == 0 || (players[id].kills > players[leaderBID[0]].kills && id != leaderBID[0])) {
                             leaderBID[4] = leaderBID[3];
                             leaderBID[3] = leaderBID[2];
                             leaderBID[2] = leaderBID[1];
                             leaderBID[1] = leaderBID[0];
                             leaderBID[0] = id;
-                        } else if (leaderBID[1] == 0 || (players[id].kills > players[leaderBID[1]] && id != leaderBID[1])) {
+                        } else if (leaderBID[1] == 0 || (players[id].kills > players[leaderBID[1]].kills && id != leaderBID[1])) {
                             leaderBID[4] = leaderBID[3];
                             leaderBID[3] = leaderBID[2];
                             leaderBID[2] = leaderBID[1];
                             leaderBID[1] = id;
-                        } else if (leaderBID[2] == 0 || (players[id].kills > players[leaderBID[2]] && id != leaderBID[2])) {
+                        } else if (leaderBID[2] == 0 || (players[id].kills > players[leaderBID[2]].kills && id != leaderBID[2])) {
                             leaderBID[4] = leaderBID[3];
                             leaderBID[3] = leaderBID[2];
                             leaderBID[2] = id;
-                        } else if (leaderBID[3] == 0 || (players[id].kills > players[leaderBID[3]] && id != leaderBID[3])) {
+                        } else if (leaderBID[3] == 0 || (players[id].kills > players[leaderBID[3]].kills && id != leaderBID[3])) {
                             leaderBID[4] = leaderBID[3];
                             leaderBID[3] = id;
-                        } else if (leaderBID[4] == 0 || (players[id].kills > players[leaderBID[4]] && id != leaderBID[4])) {
+                        } else if (leaderBID[4] == 0 || (players[id].kills > players[leaderBID[4]].kills && id != leaderBID[4])) {
                             leaderBID[4] = id;
                         }
                         self.text1 && self.text1.destroy();
