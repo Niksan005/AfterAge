@@ -254,11 +254,11 @@ class GameScene extends Phaser.Scene {
                         }
                     }
                     if (skill == 'R') {
-                        if (InputData.Ion) self.Rskill.anims.play('staticR', true);
+                        if (InputData.Ion) self.Rskill.anims.play('staticRskill', true);
                         else {
                             self.Rskill.anims.play('onLLcd', true);
                             setTimeout(() => {
-                                self.Rskill.anims.play('staticR', true);
+                                self.Rskill.anims.play('staticRskill', true);
                             }, 140000);
                         }
                     }
@@ -372,7 +372,7 @@ class GameScene extends Phaser.Scene {
             repeat: -1
         });
         self.anims.create({
-            key: 'staticR',
+            key: 'staticRskill',
             frames: self.anims.generateFrameNumbers('Rskill', { start: 0, end: 0 }),
             frameRate: 1,
             repeat: -1
