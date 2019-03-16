@@ -1,7 +1,14 @@
 
 import { CST } from '../CST.js';
 var layers = {}, Qs = [], QsBR = 0, ShouldListen = false;
-var LeaderBoard = [];
+
+var leaderBID = [];
+leaderBID[0] = 0;
+leaderBID[1] = 0;
+leaderBID[2] = 0;
+leaderBID[3] = 0;
+leaderBID[4] = 0;
+
 class GameScene extends Phaser.Scene {
     constructor() {
         super({
@@ -99,12 +106,6 @@ class GameScene extends Phaser.Scene {
 
 
         this.socket.on('upLeaderB', function (players) {
-            var leaderBID = [];
-            leaderBID[0] = 0;
-            leaderBID[1] = 0;
-            leaderBID[2] = 0;
-            leaderBID[3] = 0;
-            leaderBID[4] = 0;
 
             Object.keys(players).forEach(function (id) {
                 self.players.getChildren().forEach(function (player) {

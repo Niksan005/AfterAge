@@ -147,6 +147,7 @@ function create() {
     });
 
     UpdateXYToPlayers();
+    SendReminder();
 
 }
 
@@ -232,6 +233,15 @@ function UpdateXYToPlayers() {
     setTimeout(() => {
         UpdateXYToPlayers();
     }, 10);
+}
+
+
+
+function SendReminder() {
+    io.emit('Reminder', XY);
+    setTimeout(() => {
+        SendReminder();
+    }, 300000);// 5 min
 }
 
 
