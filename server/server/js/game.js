@@ -117,6 +117,8 @@ function create() {
             for (var i = 0; i < QsBR; i++) {
                 socket.emit('createQ', { x: Qs[i].ball.x, y: Qs[i].ball.y }, { x: Qs[i].endX, y: Qs[i].endY });
             }
+            io.emit('upLeaderB', XY);
+
             socket.broadcast.emit('newPlayer', playersData[socket.id]);
 
         });
