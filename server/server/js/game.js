@@ -117,9 +117,9 @@ function create() {
             for (var i = 0; i < QsBR; i++) {
                 socket.emit('createQ', { x: Qs[i].ball.x, y: Qs[i].ball.y }, { x: Qs[i].endX, y: Qs[i].endY });
             }
-            io.emit('upLeaderB', XY);
 
             socket.broadcast.emit('newPlayer', playersData[socket.id]);
+            io.emit('upLeaderB', XY);
 
         });
 
@@ -129,6 +129,7 @@ function create() {
                 removePlayer(self, socket.id);
                 delete playersData[socket.id];
                 io.emit('disconnect', socket.id);
+                delete XY[socket.id];
                 io.emit('upLeaderB', XY);
             }
         });
@@ -261,9 +262,14 @@ function newFunction(player1, self, player2) {
             io.emit('disconnect', player1.playerId);
             removePlayer(self, player1.playerId);
             delete playersData[player1.playerId];
-            io.emit('upLeaderB', XY);
-            playersData[player2.playerId].hp += Math.round(Math.random() * 100);
+            delete XY[player1.playerId];
+
             playersData[player2.playerId].kills++;
+
+            XY[player2.playerId].kills = playersData[player2.playerId].kills;
+            io.emit('upLeaderB', XY);
+
+            playersData[player2.playerId].hp += Math.round(Math.random() * 100);
             if (playersData[player2.playerId].hp > 100)
                 playersData[player2.playerId].hp = 100;
             io.emit('updateHP', { playerId: player2.playerId, hp: playersData[player2.playerId].hp, team: playersData[player2.playerId].team });
@@ -416,6 +422,8 @@ function dealEdmg(self, id, wx, wy) {
                     removePlayer(self, player.playerId);
                     delete playersData[player.playerId];
                     playersData[player.playerId].kills++;
+                    XY[player.playerId].kills = playersData[player.playerId].kills;
+
                     io.emit('upLeaderB', XY);
                 }
             }
