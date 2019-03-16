@@ -4,7 +4,7 @@ var layers = {};
 const WizzQcd = 400;
 const WizzWcd = 800;
 const WizzEcd = 400;
-const WizzRcd = 10;
+const WizzRcd = 8000;
 const EstunDuration = 50;
 const rangeE = 200;
 
@@ -33,9 +33,11 @@ const config = {
 
 
 function preload() {
-    this.load.tilemapTiledJSON('map', 'assets/map/TestMap1.2.json');
-    this.load.spritesheet('TilesetFull', 'assets/map/TilesetFull.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('32x32_map_tile_v1.0', 'assets/map/32x32_map_tile_v1.0.png', { frameWidth: 32, frameHeight: 32 });
+
+
+    this.load.tilemapTiledJSON('map', 'assets/map/TilemapFull.json');
+    this.load.spritesheet('tileset', 'assets/map/tileset4.png', { frameWidth: 32, frameHeight: 32 });
+
     this.load.image('sprite', 'assets/sprites/Aerax.png');
 
 }
@@ -44,26 +46,25 @@ function create() {
 
     this.players = this.physics.add.group();
 
-    self.map = self.add.tilemap('map');
-    var TilesetFull = self.map.addTilesetImage('TilesetFull');
-    var tileset = self.map.addTilesetImage('32x32_map_tile_v1.0', '32x32_map_tile_v1.0');
-    for (var i = 0; i < self.map.layers.length; i++) {
-        layers[self.map.layers[i].name] = self.map.createDynamicLayer(i, TilesetFull);
-        layers[self.map.layers[i].name + '2'] = self.map.createDynamicLayer(i, tileset);
-    }
-    //layers['Houses'].setCollisionBetween(1, 2000);
-    //layers['Trees2'].setCollisionBetween(1, 2000);
+    self.map = self.make.tilemap({ key: 'map' });
+    var tileset = self.map.addTilesetImage('tileset4', 'tileset');
+    layers[0] = self.map.createStaticLayer("base_layer", tileset, 0, 0);
+    layers[1] = self.map.createStaticLayer("partial_collision_layer", tileset, 0, 0);
+    layers[2] = self.map.createStaticLayer("full_collision_layer", tileset, 0, 0);
+
+    layers[1].setCollisionBetween(1, 2000);
+    layers[2].setCollisionBetween(1, 2000);
 
 
     io.on('connection', function (socket) {
 
 
-        socket.on('createPlayer', function (name, heroType) {
+        socket.on('createPlayer', function (name, heroType, team) {
 
             console.log('a user connected');
             // create a new player and add it to our players object
-            var startX = Math.floor(Math.random() * 700) + 50;
-            var startY = Math.floor(Math.random() * 500) + 50;
+            var startX = Math.floor(Math.random() * 1400) + 600;
+            var startY = Math.floor(Math.random() * 1400) + 600;
             playersData[socket.id] = {
                 x: startX,
                 y: startY,
@@ -72,6 +73,7 @@ function create() {
                 playerId: socket.id,
                 name: name,
                 heroType: heroType,
+                team: team,
                 Qcd: 0,
                 Qrange: 100,
                 QstateSend: true,
@@ -89,7 +91,8 @@ function create() {
                 MSpeed: 100,
                 Istationary: 0,
                 player: null,
-                lastMoved: 'static'
+                lastMoved: 'static',
+                InR: false,
             };
 
 
@@ -123,6 +126,9 @@ function create() {
             handleQWERpresses(self, socket.id, inputData);
         });
     });
+
+    UpdateXYToPlayers();
+
 }
 
 function update() {
@@ -136,8 +142,17 @@ function update() {
             playersData[player.playerId].player.setVelocityY(0);
             if (playersData[player.playerId].MSpeed == 100) {
                 playersData[player.playerId].lastMoved = 'static';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
             } else {
+                playersData[player.playerId].x = player.x;
+                playersData[player.playerId].y = player.y;
+
                 playersData[player.playerId].lastMoved = 'Wstatic';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
             }
         }
 
@@ -154,6 +169,9 @@ function update() {
             player.setVelocityX(0);
             player.setVelocityY(0);
             playersData[player.playerId].lastMoved = 'stunned';
+            if (playersData[player.playerId].InR) {
+                playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+            }
         }
         playersData[player.playerId].x = player.x;
         playersData[player.playerId].y = player.y;
@@ -161,61 +179,67 @@ function update() {
     for (var i = 0; i < QsBR; i += 1) {
         this.players.getChildren().forEach((player) => {
             var x = Qs[i].ball.x, y = Qs[i].ball.y;
-            if (player.x > x - 25 && player.x < x + 25 && player.y > y - 25 && player.y < y + 25 && player.playerId != Qs[i].id) {
+            if (player.x > x - 25 && player.x < x + 25 && player.y > y - 25 && player.y < y + 25 && playersData[player.playerId].team != playersData[Qs[i].id].team) {
                 playersData[player.playerId].Istationary += EstunDuration;
                 playersData[Qs[i].id].Ecd = 0;
                 playersData[player.playerId].lastMoved = 'stunned';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
                 io.emit('cdChange', { id: player.playerId, skill: 'E', Ion: true });
                 player.setVelocityX(0);
                 player.setVelocityY(0);
-                io.emit('updateHP', { playerId: player.playerId, hp: playersData[player.playerId].hp });
-                //theE.destroy();
-                if (playersData[player.playerId].hp <= 0) {
-                    io.emit('disconnect', player.playerId);
-                    removePlayer(self, player.playerId);
-                    delete playersData[player.playerId];
-                }
                 removeQ(i);
             }
         });
         if (Phaser.Math.Distance.Between(Qs[i].ball.x, Qs[i].ball.y, Qs[i].endX, Qs[i].endY) < 5) {
             removeQ(i);
         }
+
+
         //console.log(Qs[i].ball.x + ' : ' + Qs[i].ball.y + ' -- ' + Qs[i].endX + ' : ' + Qs[i].endY);
     }
+}
 
+function UpdateXYToPlayers() {
     io.emit('playerUpdates', playersData);
+    setTimeout(() => {
+        UpdateXYToPlayers();
+    }, 50);
 }
 
 
 function addPlayer(self, playerInfo) {
-    const player = self.physics.add.image(playerInfo.x, playerInfo.y, 'sprite').setOrigin(0.5, 0.5).setDisplaySize(50, 50);
+    const player = self.physics.add.image(playerInfo.x, playerInfo.y, 'sprite').setOrigin(0.5, 0.5).setDisplaySize(20, 20);
     //player.setDrag(100);
     //player.setMaxVelocity(200);
     player.playerId = playerInfo.playerId;
     self.players.add(player);
     playersData[player.playerId].player = player;
     //self.physics.add.collider(player, layers);
-    //self.physics.add.collider(player, layers['Houses']);
-    //self.physics.add.collider(player, layers['Trees2']);
+    self.physics.add.collider(player, layers[1]);
+    self.physics.add.collider(player, layers[2]);
     self.physics.add.collider(player, self.players, function (player1, player2) {
-        if (playersData[player2.playerId] && playersData[player2.playerId].Istationary == 0) newFunction(player1, self, player2);
-        if (playersData[player1.playerId] && playersData[player1.playerId].Istationary == 0) newFunction(player2, self, player1);
+        if (playersData[player2.playerId] && playersData[player2.playerId].Istationary == 0 && playersData[player1.playerId].team != playersData[player2.playerId].team) newFunction(player1, self, player2);
+        if (playersData[player1.playerId] && playersData[player1.playerId].Istationary == 0 && playersData[player1.playerId].team != playersData[player2.playerId].team) newFunction(player2, self, player1);
     });
 }
 
 function newFunction(player1, self, player2) {
     if (playersData[player1.playerId] && playersData[player1.playerId].hp > 0) {
         playersData[player1.playerId].hp -= 1;
-        io.emit('updateHP', { playerId: player1.playerId, hp: playersData[player1.playerId].hp });
-        if (playersData[player1.playerId].hp < 1) {
+        if (playersData[player1.playerId] < 10 && playersData[player1.playerId].InR) {
+            playersData[player1.playerId].hp = 10;
+        }
+        io.emit('updateHP', { playerId: player1.playerId, hp: playersData[player1.playerId].hp, team: playersData[player1.playerId].team });
+        if (playersData[player1.playerId].hp < 1 && !playersData[player1.playerId].InR) {
             io.emit('disconnect', player1.playerId);
             removePlayer(self, player1.playerId);
             delete playersData[player1.playerId];
             playersData[player2.playerId].hp += Math.round(Math.random() * 100);
             if (playersData[player2.playerId].hp > 100)
                 playersData[player2.playerId].hp = 100;
-            io.emit('updateHP', { playerId: player2.playerId, hp: playersData[player2.playerId].hp });
+            io.emit('updateHP', { playerId: player2.playerId, hp: playersData[player2.playerId].hp, team: playersData[player2.playerId].team });
         }
     }
 }
@@ -234,14 +258,26 @@ function handlePlayerInput(self, playerId, input) {
         if (player.x > playersData[player.playerId].endX) {
             if (playersData[playerId].MSpeed == 100) {
                 playersData[playerId].lastMoved = 'left';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
             } else {
                 playersData[playerId].lastMoved = 'Wleft';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
             }
         } else {
             if (playersData[playerId].MSpeed == 100) {
                 playersData[playerId].lastMoved = 'right';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
             } else {
                 playersData[playerId].lastMoved = 'Wright';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
             }
         }
     }
@@ -251,7 +287,7 @@ function handleQWERpresses(self, id, playerInput) {
         var player = playersData[id].player;
 
         if (playersData[id].heroType == 'Wizz') {
-            console.log(playersData[id].Istationary);
+            //console.log(playersData[id].Istationary);
             if (playerInput.Q && playersData[id].Qcd <= 0 && playersData[id].Istationary == 0) {
                 console.log('Q pressed');
                 playersData[id].Qcd = WizzQcd;
@@ -269,7 +305,7 @@ function handleQWERpresses(self, id, playerInput) {
                 playersData[id].MSpeed = 200;
                 playersData[id].hp += 40;
                 if (playersData[id].hp > 100) playersData[id].hp = 100;
-                io.emit('updateHP', { playerId: id, hp: playersData[id].hp });
+                io.emit('updateHP', { playerId: id, hp: playersData[id].hp, team: playersData[id].team });
                 self.physics.moveToObject(player, { x: playersData[id].endX, y: playersData[id].endY }, playersData[id].MSpeed);
 
                 if (Phaser.Math.Distance.Between(player.x, player.y, playersData[player.playerId].endX, playersData[player.playerId].endY) < 5) {
@@ -297,10 +333,12 @@ function handleQWERpresses(self, id, playerInput) {
                 console.log('R pressed');
                 playersData[id].Rcd = WizzRcd;
                 playersData[id].RstateSend = false;
+                playersData[id].InR = true;
+                setTimeout(() => {
+                    if (playersData[id])
+                        playersData[id].InR = false;
+                }, 5000);
                 io.emit('cdChange', { id: id, skill: 'R', Ion: false });
-                playersData[id].Qcd = 100000;
-                playersData[id].Wcd = 100000;
-                playersData[id].Ecd = 100000;
             }
         }
     }
@@ -334,16 +372,19 @@ function dealEdmg(self, id, wx, wy) {
     self.players.getChildren().forEach((player) => {
         var x = player.x, y = player.y;
         if (x > wx - 65 && x < wx + 65 && y > wy - 65 && y < wy + 65) {
-            if (player.playerId != id) {
+            if (playersData[player.playerId].team != playersData[id].team) {
                 //console.log(playersData[player.playerId].hp);
                 playersData[player.playerId].hp -= 20;
                 if (playersData[id].hp <= 90) playersData[id].hp += 10;
                 else playersData[id].hp = 100;
                 //console.log(playersData[player.playerId].hp);
-                io.emit('updateHP', { playerId: player.playerId, hp: playersData[player.playerId].hp });
-                io.emit('updateHP', { playerId: id, hp: playersData[id].hp });
+                if (playersData[player.playerId].hp < 10 && playersData[player.playerId].InR) {
+                    playersData[player.playerId].hp = 10;
+                }
+                io.emit('updateHP', { playerId: player.playerId, hp: playersData[player.playerId].hp, team: playersData[player.playerId].team });
+                io.emit('updateHP', { playerId: id, hp: playersData[id].hp, team: playersData[id].team });
                 //theE.destroy();
-                if (playersData[player.playerId].hp <= 0) {
+                if (playersData[player.playerId].hp <= 0 && !playersData[player.playerId].InR) {
                     io.emit('disconnect', player.playerId);
                     removePlayer(self, player.playerId);
                     delete playersData[player.playerId];

@@ -7,17 +7,20 @@ class GameScene extends Phaser.Scene {
             key: CST.SCENES.GAME
         })
     }
-    init(HeroType, Name, IMobile) {
-        this.HeroType = HeroType;
-        this.Name = Name;
-        this.IMobile = IMobile;
+    init(a) {
+        this.HeroType = a.HeroType;
+        this.Name = a.Name;
+        this.IMobile = a.IMobile;
+        this.team = a.team;
+        //console.log(this.team);
     }
 
     create() {
         var self = this;
         ShouldListen = true;
         this.socket = io();
-        this.socket.emit('createPlayer', this.Name, this.HeroType);
+        //console.log(this.team);
+        this.socket.emit('createPlayer', this.Name, this.HeroType, this.team);
 
         this.players = this.add.group();
         this.name = this.add.group();
@@ -28,6 +31,7 @@ class GameScene extends Phaser.Scene {
         this.drawLayers(self);
         this.drawHUD(self);
         this.setCamera(self);
+
 
         /// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|
         /// IO = conection with the server.js                                                            |
@@ -73,22 +77,34 @@ class GameScene extends Phaser.Scene {
             }
         });
         this.socket.on('playerUpdates', function (players) {
-            if (ShouldListen) {
-                Object.keys(players).forEach(function (id) {
-                    self.players.getChildren().forEach(function (player) {
-                        if (players[id] && players[id].playerId === player.playerId) {
-                            player.setPosition(Math.round(players[id].x), Math.round(players[id].y));
-                            player.nameText.setPosition(player.x - 25, player.y - 40);
+            /*if (ShouldListen) {
+                if (self.players[player.playerId]) {
+                    self.players[player.playerId].player.setPosition(Math.round(players[id].x), Math.round(players[id].y));
+                    self.players[player.playerId].player.nameText.setPosition(player.x - 25, player.y - 40);
 
-                            player.HP.setPosition(player.x - 25, player.y - 28);
+                    self.players[player.playerId].player.HP.setPosition(self.players[player.playerId].player.x - 25, self.players[player.playerId].player.y - 28);
 
-                            if (player.anims.currentAnim.key != players[id].lastMoved) {
-                                player.anims.play(players[id].lastMoved);
-                            }
+                    if (self.players[player.playerId].player.anims.currentAnim.key != self.players[player.playerId].lastMoved) {
+                        self.players[player.playerId].player.anims.play(players[player.playerId].lastMoved);
+                    }
+                }
+            }*/
+            Object.keys(players).forEach(function (id) {
+                self.players.getChildren().forEach(function (player) {
+                    if (players[id] && players[id].playerId === player.playerId) {
+                        player.setPosition(Math.round(players[id].x), Math.round(players[id].y));
+                        player.nameText.setPosition(player.x - 25, player.y - 40);
+
+                        player.HP.setPosition(player.x - 25, player.y - 28);
+
+                        if (player.anims.currentAnim.key != players[id].lastMoved) {
+                            player.anims.play(players[id].lastMoved);
+                            console.log(players[id].lastMoved);
                         }
-                    });
+                    }
                 });
-            }
+            });
+
         });
 
         this.socket.on('updateHP', function (playerInfo) {
@@ -98,10 +114,14 @@ class GameScene extends Phaser.Scene {
                         player.HP.destroy();
                         var rect = new Phaser.Geom.Rectangle(0, 0, playerInfo.hp / 2, 5);
                         //console.log(playerInfo.hp);
-                        if (playerInfo.playerId == self.socket.id) {
+                        if (playerInfo.team == 'blue') {
                             player.HP = self.add.graphics({ fillStyle: { color: 0x1111ff } });
-                        } else {
+                        } else if (playerInfo.team == 'red') {
                             player.HP = self.add.graphics({ fillStyle: { color: 0xff1111 } });
+                        } else if (playerInfo.team == 'green') {
+                            player.HP = self.add.graphics({ fillStyle: { color: 0x11ff11 } });
+                        } else if (playerInfo.team == 'yellow') {
+                            player.HP = self.add.graphics({ fillStyle: { color: 0xffa200 } });
                         }
                         player.HP.fillRectShape(rect);
                     }
@@ -159,17 +179,17 @@ class GameScene extends Phaser.Scene {
                         else {
                             self.Qskill.anims.play('oncd', true);
                             setTimeout(() => {
-                                Qskill.anims.play('staticQ');
-                            }, 4000);
+                                self.Qskill.anims.play('staticQ', true);
+                            }, 7000);
                         }
                     }
                     if (skill == 'W') {
-                        if (InputData.Ion) self.Qskill.anims.play('staticW', true);
+                        if (InputData.Ion) self.Wskill.anims.play('staticW', true);
                         else {
                             self.Wskill.anims.play('onLcd', true);
                             setTimeout(() => {
-                                Wskill.anims.play('staticW');
-                            }, 8000);
+                                self.Wskill.anims.play('staticW', true);
+                            }, 14000);
                         }
                     }
                     if (skill == 'E') {
@@ -177,8 +197,8 @@ class GameScene extends Phaser.Scene {
                         else {
                             self.Eskill.anims.play('oncd', true);
                             setTimeout(() => {
-                                Eskill.anims.play('staticE');
-                            }, 4000);
+                                self.Eskill.anims.play('staticE', true);
+                            }, 7000);
                         }
                     }
                     if (skill == 'R') {
@@ -240,13 +260,14 @@ class GameScene extends Phaser.Scene {
     }
 
     drawLayers(self) {
-        self.map = self.add.tilemap('map');
-        var TilesetFull = self.map.addTilesetImage('TilesetFull', 'TilesetFull');
-        var tileset = self.map.addTilesetImage('32x32_map_tile_v1.0', '32x32_map_tile_v1.0');
-        for (var i = 0; i < self.map.layers.length; i++) {
-            layers[self.map.layers[i].name] = self.map.createDynamicLayer(i, TilesetFull);
-            layers[self.map.layers[i].name + '2'] = self.map.createDynamicLayer(i, tileset);
-        }
+        self.map = self.make.tilemap({ key: 'map' });
+        var tileset = self.map.addTilesetImage('tileset4', 'tileset');
+        layers[0] = self.map.createStaticLayer("base_layer", tileset, 0, 0);
+        layers[1] = self.map.createStaticLayer("partial_collision_layer", tileset, 0, 0);
+        layers[2] = self.map.createStaticLayer("full_collision_layer", tileset, 0, 0);
+
+
+
     }
     drawHUD(self) {
         self.hud = self.add.image(138, 576 - 36, 'hud').setScrollFactor(0).setDisplaySize(138 * 2, 36 * 2);
@@ -348,14 +369,55 @@ class GameScene extends Phaser.Scene {
             frameRate: 24,
             repeat: -1
         });
+        // R VVV
+        self.anims.create({
+            key: 'WrightR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 64, end: 71 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'rightR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 64, end: 71 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'WleftR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 72, end: 79 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'leftR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 72, end: 79 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'staticR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 80, end: 83 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'WstaticR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 80, end: 83 }),
+            frameRate: 24,
+            repeat: -1
+        });
         player.anims.play('static');
         player.nameText = self.add.text(playerInfo.x - 25, playerInfo.y - 30, 'The PL-Name', { fontSize: '10px', fill: '#000', fontWeight: 'bold' });
         var rect = new Phaser.Geom.Rectangle(0, 0, playerInfo.hp / 2, 5);
         //console.log(playerInfo.hp);
-        if (playerInfo.playerId == self.socket.id) {
+        if (playerInfo.team == 'blue') {
             player.HP = self.add.graphics({ fillStyle: { color: 0x1111ff } });
-        } else {
+        } else if (playerInfo.team == 'red') {
             player.HP = self.add.graphics({ fillStyle: { color: 0xff1111 } });
+        } else if (playerInfo.team == 'green') {
+            player.HP = self.add.graphics({ fillStyle: { color: 0x11ff11 } });
+        } else {
+            player.HP = self.add.graphics({ fillStyle: { color: 0xffa200 } });
         }
         player.HP.fillRectShape(rect);
 
