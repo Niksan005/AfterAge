@@ -1,6 +1,10 @@
 const playersData = {};
 const XY = {};
 var layers = {};
+var LeaderBoard = [];
+
+
+
 
 const WizzQcd = 400;
 const WizzWcd = 800;
@@ -72,6 +76,8 @@ function create() {
                 y: startY,
                 playerId: socket.id,
                 lastMoved: 'static',
+                kills: 0,
+                Name: name
             };
             playersData[socket.id] = {
                 x: startX,
@@ -101,6 +107,7 @@ function create() {
                 player: null,
                 lastMoved: 'static',
                 InR: false,
+                kills: 0,
             };
 
 
@@ -189,6 +196,8 @@ function update() {
         XY[player.playerId].x = player.x;
         XY[player.playerId].y = player.y;
         XY[player.playerId].lastMoved = playersData[player.playerId].lastMoved;
+        XY[player.playerId].kills = playersData[player.playerId].kills;
+
     });
     for (var i = 0; i < QsBR; i += 1) {
         this.players.getChildren().forEach((player) => {
@@ -251,6 +260,7 @@ function newFunction(player1, self, player2) {
             removePlayer(self, player1.playerId);
             delete playersData[player1.playerId];
             playersData[player2.playerId].hp += Math.round(Math.random() * 100);
+            playersData[player2.playerId].kills++;
             if (playersData[player2.playerId].hp > 100)
                 playersData[player2.playerId].hp = 100;
             io.emit('updateHP', { playerId: player2.playerId, hp: playersData[player2.playerId].hp, team: playersData[player2.playerId].team });
@@ -402,6 +412,7 @@ function dealEdmg(self, id, wx, wy) {
                     io.emit('disconnect', player.playerId);
                     removePlayer(self, player.playerId);
                     delete playersData[player.playerId];
+                    playersData[player.playerId].kills++;
                 }
             }
         }

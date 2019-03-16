@@ -1,6 +1,7 @@
 
 import { CST } from '../CST.js';
 var layers = {}, Qs = [], QsBR = 0, ShouldListen = false;
+var LeaderBoard = [];
 class GameScene extends Phaser.Scene {
     constructor() {
         super({
@@ -77,20 +78,16 @@ class GameScene extends Phaser.Scene {
             }
         });
         this.socket.on('playerUpdates', function (players) {
-            /*if (ShouldListen) {
-                if (self.players[player.playerId]) {
-                    self.players[player.playerId].player.setPosition(Math.round(players[id].x), Math.round(players[id].y));
-                    self.players[player.playerId].player.nameText.setPosition(player.x - 25, player.y - 40);
+            var leaderBID = [];
+            leaderBID[0] = 0;
+            leaderBID[1] = 0;
+            leaderBID[2] = 0;
+            leaderBID[3] = 0;
+            leaderBID[4] = 0;
 
-                    self.players[player.playerId].player.HP.setPosition(self.players[player.playerId].player.x - 25, self.players[player.playerId].player.y - 28);
-
-                    if (self.players[player.playerId].player.anims.currentAnim.key != self.players[player.playerId].lastMoved) {
-                        self.players[player.playerId].player.anims.play(players[player.playerId].lastMoved);
-                    }
-                }
-            }*/
             Object.keys(players).forEach(function (id) {
                 self.players.getChildren().forEach(function (player) {
+
                     if (players[id] && players[id].playerId === player.playerId) {
                         player.setPosition(Math.round(players[id].x), Math.round(players[id].y));
                         player.nameText.setPosition(player.x - 25, player.y - 40);
@@ -101,22 +98,48 @@ class GameScene extends Phaser.Scene {
                             player.anims.play(players[id].lastMoved);
                             console.log(players[id].lastMoved);
                         }
+                        if (leaderBID[0] == 0 || (players[id].kills > players[leaderBID[0]] && id != leaderBID[0])) {
+                            leaderBID[4] = leaderBID[3];
+                            leaderBID[3] = leaderBID[2];
+                            leaderBID[2] = leaderBID[1];
+                            leaderBID[1] = leaderBID[0];
+                            leaderBID[0] = id;
+                        } else if (leaderBID[1] == 0 || (players[id].kills > players[leaderBID[1]] && id != leaderBID[1])) {
+                            leaderBID[4] = leaderBID[3];
+                            leaderBID[3] = leaderBID[2];
+                            leaderBID[2] = leaderBID[1];
+                            leaderBID[1] = id;
+                        } else if (leaderBID[2] == 0 || (players[id].kills > players[leaderBID[2]] && id != leaderBID[2])) {
+                            leaderBID[4] = leaderBID[3];
+                            leaderBID[3] = leaderBID[2];
+                            leaderBID[2] = id;
+                        } else if (leaderBID[3] == 0 || (players[id].kills > players[leaderBID[3]] && id != leaderBID[3])) {
+                            leaderBID[4] = leaderBID[3];
+                            leaderBID[3] = id;
+                        } else if (leaderBID[4] == 0 || (players[id].kills > players[leaderBID[4]] && id != leaderBID[4])) {
+                            leaderBID[4] = id;
+                        }
+                        self.text1 && self.text1.destroy();
+                        self.text1 = self.add.text(12 * 64, 1 * 32, "1 : " + players[leaderBID[0]].Name + " - " + players[leaderBID[0]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
+                        if (leaderBID[1] != 0) {
+                            self.text2 && self.text2.destroy();
+                            self.text2 = self.add.text(12 * 64, 2 * 32, "2 : " + players[leaderBID[1]].Name + " - " + players[leaderBID[1]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
+                        }
+                        if (leaderBID[2] != 0) {
+                            self.text3 && self.text3.destroy();
+                            self.text3 = self.add.text(12 * 64, 2 * 32, "3 : " + players[leaderBID[2]].Name + " - " + players[leaderBID[2]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
+                        }
+                        if (leaderBID[3] != 0) {
+                            self.text4 && self.text4.destroy();
+                            self.text4 = self.add.text(12 * 64, 2 * 32, "4 : " + players[leaderBID[3]].Name + " - " + players[leaderBID[3]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
+                        }
+                        if (leaderBID[4] != 0) {
+                            self.text5 && self.text5.destroy();
+                            self.text5 = self.add.text(12 * 64, 2 * 32, "5 : " + players[leaderBID[4]].Name + " - " + players[leaderBID[4]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
+                        }
                     }
                 });
             });
-            /*
-            for (var i in players) {
-                if (self.players[i]) {
-                    self.players[i].setPosition(Math.round(players[i].x), Math.round(players[i].y));
-                    self.players[i].nameText.setPosition(players[i].x - 25, players[i].y - 40);
-
-                    self.players[i].HP.setPosition(player[i].x - 25, player[i].y - 28);
-
-                    if (self.players[i].anims.currentAnim.key != players[i].lastMoved) {
-                        self.players[i].anims.play(players[i].lastMoved);
-                    }
-                }
-            }*/
         });
 
         this.socket.on('updateHP', function (playerInfo) {
@@ -437,6 +460,7 @@ class GameScene extends Phaser.Scene {
         });
         player.anims.play('static');
         player.nameText = self.add.text(playerInfo.x - 25, playerInfo.y - 30, playerInfo.name, { fontSize: '10px', fill: '#000', fontWeight: 'bold' });
+        player.Name = playerInfo.name;
         var rect = new Phaser.Geom.Rectangle(0, 0, playerInfo.hp / 2, 5);
         //console.log(playerInfo.hp);
         if (playerInfo.team == 'blue') {
