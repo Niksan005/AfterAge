@@ -59,7 +59,7 @@ function create() {
     io.on('connection', function (socket) {
 
 
-        socket.on('createPlayer', function (name, heroType) {
+        socket.on('createPlayer', function (name, heroType, team) {
 
             console.log('a user connected');
             // create a new player and add it to our players object
@@ -73,6 +73,7 @@ function create() {
                 playerId: socket.id,
                 name: name,
                 heroType: heroType,
+                team: team,
                 Qcd: 0,
                 Qrange: 100,
                 QstateSend: true,
@@ -172,7 +173,7 @@ function update() {
     for (var i = 0; i < QsBR; i += 1) {
         this.players.getChildren().forEach((player) => {
             var x = Qs[i].ball.x, y = Qs[i].ball.y;
-            if (player.x > x - 25 && player.x < x + 25 && player.y > y - 25 && player.y < y + 25 && player.playerId != Qs[i].id) {
+            if (player.x > x - 25 && player.x < x + 25 && player.y > y - 25 && player.y < y + 25 && playersData[player.playerId].team != playersData[Qs[i].id].team) {
                 playersData[player.playerId].Istationary += EstunDuration;
                 playersData[Qs[i].id].Ecd = 0;
                 playersData[player.playerId].lastMoved = 'stunned';
@@ -210,8 +211,8 @@ function addPlayer(self, playerInfo) {
     self.physics.add.collider(player, layers[1]);
     self.physics.add.collider(player, layers[2]);
     self.physics.add.collider(player, self.players, function (player1, player2) {
-        if (playersData[player2.playerId] && playersData[player2.playerId].Istationary == 0) newFunction(player1, self, player2);
-        if (playersData[player1.playerId] && playersData[player1.playerId].Istationary == 0) newFunction(player2, self, player1);
+        if (playersData[player2.playerId] && playersData[player2.playerId].Istationary == 0 && playersData[player1.playerId].team != playersData[player2.playerId].team) newFunction(player1, self, player2);
+        if (playersData[player1.playerId] && playersData[player1.playerId].Istationary == 0 && playersData[player1.playerId].team != playersData[player2.playerId].team) newFunction(player2, self, player1);
     });
 }
 
@@ -350,7 +351,7 @@ function dealEdmg(self, id, wx, wy) {
     self.players.getChildren().forEach((player) => {
         var x = player.x, y = player.y;
         if (x > wx - 65 && x < wx + 65 && y > wy - 65 && y < wy + 65) {
-            if (player.playerId != id) {
+            if (playersData[player.playerId].team != playersData[id].team) {
                 //console.log(playersData[player.playerId].hp);
                 playersData[player.playerId].hp -= 20;
                 if (playersData[id].hp <= 90) playersData[id].hp += 10;

@@ -7,17 +7,20 @@ class GameScene extends Phaser.Scene {
             key: CST.SCENES.GAME
         })
     }
-    init(HeroType, Name, IMobile) {
-        this.HeroType = HeroType;
-        this.Name = Name;
-        this.IMobile = IMobile;
+    init(a) {
+        this.HeroType = a.HeroType;
+        this.Name = a.Name;
+        this.IMobile = a.IMobile;
+        this.team = a.team;
+        console.log(this.team);
     }
 
     create() {
         var self = this;
         ShouldListen = true;
         this.socket = io();
-        this.socket.emit('createPlayer', this.Name, this.HeroType);
+        console.log(this.team);
+        this.socket.emit('createPlayer', this.Name, this.HeroType, this.team);
 
         this.players = this.add.group();
         this.name = this.add.group();
@@ -109,10 +112,14 @@ class GameScene extends Phaser.Scene {
                         player.HP.destroy();
                         var rect = new Phaser.Geom.Rectangle(0, 0, playerInfo.hp / 2, 5);
                         //console.log(playerInfo.hp);
-                        if (playerInfo.playerId == self.socket.id) {
+                        if (playerInfo.team == 'blue') {
                             player.HP = self.add.graphics({ fillStyle: { color: 0x1111ff } });
-                        } else {
+                        } else if (playerInfo.team == 'red') {
                             player.HP = self.add.graphics({ fillStyle: { color: 0xff1111 } });
+                        } else if (playerInfo.team == 'green') {
+                            player.HP = self.add.graphics({ fillStyle: { color: 0x11ff11 } });
+                        } else if (playerInfo.team == 'yellow') {
+                            player.HP = self.add.graphics({ fillStyle: { color: 0xffa200 } });
                         }
                         player.HP.fillRectShape(rect);
                     }
@@ -364,11 +371,16 @@ class GameScene extends Phaser.Scene {
         player.nameText = self.add.text(playerInfo.x - 25, playerInfo.y - 30, 'The PL-Name', { fontSize: '10px', fill: '#000', fontWeight: 'bold' });
         var rect = new Phaser.Geom.Rectangle(0, 0, playerInfo.hp / 2, 5);
         //console.log(playerInfo.hp);
-        if (playerInfo.playerId == self.socket.id) {
+        if (playerInfo.team == 'blue') {
             player.HP = self.add.graphics({ fillStyle: { color: 0x1111ff } });
-        } else {
+        } else if (playerInfo.team == 'red') {
             player.HP = self.add.graphics({ fillStyle: { color: 0xff1111 } });
+        } else if (playerInfo.team == 'green') {
+            player.HP = self.add.graphics({ fillStyle: { color: 0x11ff11 } });
+        } else {
+            player.HP = self.add.graphics({ fillStyle: { color: 0xffa200 } });
         }
+        console.log(playerInfo);
         player.HP.fillRectShape(rect);
 
         self.players.add(player);
