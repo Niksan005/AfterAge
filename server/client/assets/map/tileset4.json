@@ -1,0 +1,148 @@
+{ "columns":13,
+ "image":"tileset4.png",
+ "imageheight":352,
+ "imagewidth":416,
+ "margin":0,
+ "name":"tileset4",
+ "spacing":0,
+ "terrains":[
+        {
+         "name":"Grass",
+         "tile":17
+        }, 
+        {
+         "name":"Lake",
+         "tile":136
+        }, 
+        {
+         "name":"Path",
+         "tile":55
+        }],
+ "tilecount":143,
+ "tiledversion":"1.2.2",
+ "tileheight":32,
+ "tiles":[
+        {
+         "id":0,
+         "terrain":[0, 0, 0, 2]
+        }, 
+        {
+         "id":1,
+         "terrain":[0, 0, 2, 0]
+        }, 
+        {
+         "id":13,
+         "terrain":[0, 2, 0, 0]
+        }, 
+        {
+         "id":14,
+         "terrain":[2, 0, 0, 0]
+        }, 
+        {
+         "id":26,
+         "terrain":[2, 2, 2, 0]
+        }, 
+        {
+         "id":27,
+         "terrain":[2, 2, 0, 2]
+        }, 
+        {
+         "id":29,
+         "terrain":[0, 0, 0, 0]
+        }, 
+        {
+         "id":39,
+         "terrain":[2, 0, 2, 2]
+        }, 
+        {
+         "id":40,
+         "terrain":[0, 2, 2, 2]
+        }, 
+        {
+         "id":41,
+         "terrain":[0, 0, 0, 0]
+        }, 
+        {
+         "id":52,
+         "terrain":[2, 0, 2, 0]
+        }, 
+        {
+         "id":53,
+         "terrain":[0, 2, 0, 2]
+        }, 
+        {
+         "id":54,
+         "terrain":[2, 2, 2, 2]
+        }, 
+        {
+         "id":55,
+         "terrain":[2, 2, 2, 2]
+        }, 
+        {
+         "id":56,
+         "terrain":[0, 0, 2, 2]
+        }, 
+        {
+         "id":65,
+         "terrain":[0, 0, 0, 0]
+        }, 
+        {
+         "id":78,
+         "terrain":[2, 2, 0, 0]
+        }, 
+        {
+         "id":117,
+         "terrain":[1, 1, 1, 2]
+        }, 
+        {
+         "id":118,
+         "terrain":[1, 1, 2, 1]
+        }, 
+        {
+         "id":119,
+         "terrain":[2, 2, 2, 1]
+        }, 
+        {
+         "id":120,
+         "terrain":[2, 2, 1, 2]
+        }, 
+        {
+         "id":121,
+         "terrain":[1, 1, 2, 2]
+        }, 
+        {
+         "id":122,
+         "terrain":[2, 1, 2, 1]
+        }, 
+        {
+         "id":123,
+         "terrain":[1, 1, 1, 1]
+        }, 
+        {
+         "id":130,
+         "terrain":[1, 2, 1, 1]
+        }, 
+        {
+         "id":131,
+         "terrain":[2, 1, 1, 1]
+        }, 
+        {
+         "id":132,
+         "terrain":[2, 1, 2, 2]
+        }, 
+        {
+         "id":133,
+         "terrain":[1, 2, 2, 2]
+        }, 
+        {
+         "id":134,
+         "terrain":[2, 2, 1, 1]
+        }, 
+        {
+         "id":135,
+         "terrain":[1, 2, 1, 2]
+        }],
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.2
+}
