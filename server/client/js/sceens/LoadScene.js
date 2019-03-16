@@ -14,7 +14,7 @@ class LoadScene extends Phaser.Scene {
 
 
         //this.load.image('Select', 'assets/sprites/loadingScreen/Selected.png')
-        //this.load.image('backgroun', 'assets/sprites/loadingScreen/bg.png');
+        this.load.image('background', 'assets/sprites/loadingScreen/bg.png');
         this.load.image('startButt', 'assets/sprites/loadingScreen/startButton.png');
 
         this.load.image('flagRed', 'assets/sprites/loadingScreen/flagRed.png');

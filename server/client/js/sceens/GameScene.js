@@ -32,6 +32,7 @@ class GameScene extends Phaser.Scene {
         this.drawHUD(self);
         this.setCamera(self);
 
+
         /// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|
         /// IO = conection with the server.js                                                            |
         /// IO CONECTION XXXXXX IO CONECTION XXXXXX IO CONECTION XXXXXX IO CONECTION XXXXXX IO CONECTION |
