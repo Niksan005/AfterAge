@@ -436,7 +436,7 @@ class GameScene extends Phaser.Scene {
             repeat: -1
         });
         player.anims.play('static');
-        player.nameText = self.add.text(playerInfo.x - 25, playerInfo.y - 30, 'The PL-Name', { fontSize: '10px', fill: '#000', fontWeight: 'bold' });
+        player.nameText = self.add.text(playerInfo.x - 25, playerInfo.y - 30, playerInfo.name, { fontSize: '10px', fill: '#000', fontWeight: 'bold' });
         var rect = new Phaser.Geom.Rectangle(0, 0, playerInfo.hp / 2, 5);
         //console.log(playerInfo.hp);
         if (playerInfo.team == 'blue') {

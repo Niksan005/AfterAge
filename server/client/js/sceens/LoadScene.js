@@ -32,6 +32,7 @@ class LoadScene extends Phaser.Scene {
         this.load.image('Select', 'assets/sprites/loadingScreen/flagSelect.png')
         this.load.image('background', 'assets/sprites/loadingScreen/bg.png');
         this.load.image('startButt', 'assets/sprites/loadingScreen/startButton.png');
+        this.load.image('createName', 'assets/sprites/loadingScreen/createName.png');
 
         this.load.image('flagRed', 'assets/sprites/loadingScreen/flagRed.png');
         this.load.image('flagBlue', 'assets/sprites/loadingScreen/flagBlue.png');
@@ -94,6 +95,11 @@ class LoadScene extends Phaser.Scene {
             .setInteractive()
             .on('pointerdown', () => this.scene.start(CST.SCENES.GAME, { HeroType: this.HeroType, Name: this.Name, Imobile: false, team: this.team }))
             .on('pointerover', () => console.log('Over'));
+
+
+        this.startButt = this.add.sprite(24 * 32, 9 * 32, 'createName').setDisplaySize(100, 100)
+            .setInteractive()
+            .on('pointerdown', () => this.Name = prompt("Please enter your name:", this.Name));
 
         this.flagRed = this.add.image(80, 15 * 32, 'flagRed')
             .setInteractive()
