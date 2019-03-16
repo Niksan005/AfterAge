@@ -12,14 +12,14 @@ class GameScene extends Phaser.Scene {
         this.Name = a.Name;
         this.IMobile = a.IMobile;
         this.team = a.team;
-        console.log(this.team);
+        //console.log(this.team);
     }
 
     create() {
         var self = this;
         ShouldListen = true;
         this.socket = io();
-        console.log(this.team);
+        //console.log(this.team);
         this.socket.emit('createPlayer', this.Name, this.HeroType, this.team);
 
         this.players = this.add.group();
@@ -419,7 +419,6 @@ class GameScene extends Phaser.Scene {
         } else {
             player.HP = self.add.graphics({ fillStyle: { color: 0xffa200 } });
         }
-        console.log(playerInfo);
         player.HP.fillRectShape(rect);
 
         self.players.add(player);
