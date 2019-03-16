@@ -30,7 +30,7 @@ class LoadScene extends Phaser.Scene {
         this.load.spritesheet('Qskill', 'assets/sprites/Qskill.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('Wskill', 'assets/sprites/Wskill.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('Eskill', 'assets/sprites/Eskill.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.image('Rskill', 'assets/sprites/Rskill.png');
+        this.load.spritesheet('Rskill', 'assets/sprites/Rskill.png', { frameWidth: 32, frameHeight: 32 });
 
 
         this.load.spritesheet('sprite', 'assets/sprites/AeraxSpriteSheet.png', { frameWidth: 50, frameHeight: 50 });

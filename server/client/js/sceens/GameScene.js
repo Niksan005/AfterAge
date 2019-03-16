@@ -214,8 +214,13 @@ class GameScene extends Phaser.Scene {
                         }
                     }
                     if (skill == 'R') {
-                        self.Rskill.x = InputData.Ion ? 36 + 3 * 67 : - 100;
-                        self.Rskill.y = 540;
+                        if (InputData.Ion) self.Rskill.anims.play('staticR', true);
+                        else {
+                            self.Rskill.anims.play('onLLcd', true);
+                            setTimeout(() => {
+                                self.Rskill.anims.play('staticR', true);
+                            }, 140000);
+                        }
                     }
                 }
             }
@@ -286,6 +291,7 @@ class GameScene extends Phaser.Scene {
         self.Qskill = self.add.sprite(36 + 0 * 67, 540, 'Qskill').setScrollFactor(0).setDisplaySize(64, 64);
         self.Wskill = self.add.sprite(36 + 1 * 67, 540, 'Wskill').setScrollFactor(0).setDisplaySize(64, 64);
         self.Eskill = self.add.sprite(36 + 2 * 67, 540, 'Eskill').setScrollFactor(0).setDisplaySize(64, 64);
+        self.Rskill = self.add.sprite(36 + 3 * 67, 540, 'Rskill').setScrollFactor(0).setDisplaySize(64, 64);
         self.anims.create({
             key: 'oncd',
             frames: self.anims.generateFrameNumbers('cd', { start: 0, end: 24 }),
@@ -296,6 +302,12 @@ class GameScene extends Phaser.Scene {
             key: 'onLcd',
             frames: self.anims.generateFrameNumbers('cd', { start: 0, end: 24 }),
             frameRate: 1.75,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'onLLcd',
+            frames: self.anims.generateFrameNumbers('cd', { start: 0, end: 24 }),
+            frameRate: 0.175,
             repeat: -1
         });
         self.anims.create({
@@ -319,8 +331,13 @@ class GameScene extends Phaser.Scene {
             frameRate: 1,
             repeat: -1
         });
+        self.anims.create({
+            key: 'staticR',
+            frames: self.anims.generateFrameNumbers('Rskill', { start: 0, end: 0 }),
+            frameRate: 1,
+            repeat: -1
+        });
 
-        self.Rskill = self.add.image(36 + 3 * 67, 540, 'Rskill').setScrollFactor(0).setDisplaySize(64, 64);
     }
     setCamera(self) {
 
