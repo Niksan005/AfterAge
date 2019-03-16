@@ -241,7 +241,7 @@ function SendReminder() {
     io.emit('Reminder', XY);
     setTimeout(() => {
         SendReminder();
-    }, 300000);// 5 min
+    }, 10000);//300000);// 5 min
 }
 
 

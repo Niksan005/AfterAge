@@ -221,6 +221,13 @@ class GameScene extends Phaser.Scene {
 
             }
         });
+
+        this.socket.on('Reminder', function () {
+            self.remind = self.add.image(14 * 64, 8 * 64, 'notification').setScrollFactor(0);
+            setTimeout(() => {
+                self.remind && self.remind.destroy();
+            }, 5000);
+        });
         this.socket.on('cdChange', function (InputData) {
 
             if (ShouldListen) {

@@ -53,7 +53,9 @@ class LoadScene extends Phaser.Scene {
         this.load.spritesheet('sprite', 'assets/sprites/AeraxSpriteSheet.png', { frameWidth: 50, frameHeight: 50 });
         this.load.spritesheet('spriteTank', 'assets/sprites/tankspritesheet.png', { frameWidth: 50, frameHeight: 50 });
 
-    }
+        this.load.image('notification', 'assets/sprites/timeNotification.png');
+
+    }//timeNotification.png
     create() {
 
         this.anims.create({
