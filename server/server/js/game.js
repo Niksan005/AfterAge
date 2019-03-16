@@ -33,9 +33,11 @@ const config = {
 
 
 function preload() {
-    this.load.tilemapTiledJSON('map', 'assets/map/TestMap1.2.json');
-    this.load.spritesheet('TilesetFull', 'assets/map/TilesetFull.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('32x32_map_tile_v1.0', 'assets/map/32x32_map_tile_v1.0.png', { frameWidth: 32, frameHeight: 32 });
+
+
+    this.load.tilemapTiledJSON('map', 'assets/map/TilemapFull.json');
+    this.load.spritesheet('tileset', 'assets/map/tileset4.png', { frameWidth: 32, frameHeight: 32 });
+
     this.load.image('sprite', 'assets/sprites/Aerax.png');
 
 }
@@ -44,15 +46,14 @@ function create() {
 
     this.players = this.physics.add.group();
 
-    self.map = self.add.tilemap('map');
-    var TilesetFull = self.map.addTilesetImage('TilesetFull');
-    var tileset = self.map.addTilesetImage('32x32_map_tile_v1.0', '32x32_map_tile_v1.0');
-    for (var i = 0; i < self.map.layers.length; i++) {
-        layers[self.map.layers[i].name] = self.map.createDynamicLayer(i, TilesetFull);
-        layers[self.map.layers[i].name + '2'] = self.map.createDynamicLayer(i, tileset);
-    }
-    //layers['Houses'].setCollisionBetween(1, 2000);
-    //layers['Trees2'].setCollisionBetween(1, 2000);
+    self.map = self.make.tilemap({ key: 'map' });
+    var tileset = self.map.addTilesetImage('tileset4', 'tileset');
+    layers[0] = self.map.createStaticLayer("base_layer", tileset, 0, 0);
+    layers[1] = self.map.createStaticLayer("partial_collision_layer", tileset, 0, 0);
+    layers[2] = self.map.createStaticLayer("full_collision_layer", tileset, 0, 0);
+
+    layers[1].setCollisionBetween(1, 2000);
+    layers[2].setCollisionBetween(1, 2000);
 
 
     io.on('connection', function (socket) {
@@ -89,7 +90,8 @@ function create() {
                 MSpeed: 100,
                 Istationary: 0,
                 player: null,
-                lastMoved: 'static'
+                lastMoved: 'static',
+                InR: false,
             };
 
 
@@ -155,6 +157,9 @@ function update() {
             player.setVelocityY(0);
             playersData[player.playerId].lastMoved = 'stunned';
         }
+        if (playersData[player.playerId].InR) {
+            playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+        }
         playersData[player.playerId].x = player.x;
         playersData[player.playerId].y = player.y;
     });
@@ -171,6 +176,9 @@ function update() {
                 io.emit('updateHP', { playerId: player.playerId, hp: playersData[player.playerId].hp });
                 //theE.destroy();
                 if (playersData[player.playerId].hp <= 0) {
+                    if (playersData[player.playerId].InR) {
+                        playersData[player.playerId].hp = 10;
+                    }
                     io.emit('disconnect', player.playerId);
                     removePlayer(self, player.playerId);
                     delete playersData[player.playerId];
@@ -189,15 +197,15 @@ function update() {
 
 
 function addPlayer(self, playerInfo) {
-    const player = self.physics.add.image(playerInfo.x, playerInfo.y, 'sprite').setOrigin(0.5, 0.5).setDisplaySize(50, 50);
+    const player = self.physics.add.image(playerInfo.x, playerInfo.y, 'sprite').setOrigin(0.5, 0.5).setDisplaySize(20, 20);
     //player.setDrag(100);
     //player.setMaxVelocity(200);
     player.playerId = playerInfo.playerId;
     self.players.add(player);
     playersData[player.playerId].player = player;
     //self.physics.add.collider(player, layers);
-    //self.physics.add.collider(player, layers['Houses']);
-    //self.physics.add.collider(player, layers['Trees2']);
+    self.physics.add.collider(player, layers[1]);
+    self.physics.add.collider(player, layers[2]);
     self.physics.add.collider(player, self.players, function (player1, player2) {
         if (playersData[player2.playerId] && playersData[player2.playerId].Istationary == 0) newFunction(player1, self, player2);
         if (playersData[player1.playerId] && playersData[player1.playerId].Istationary == 0) newFunction(player2, self, player1);
@@ -251,7 +259,7 @@ function handleQWERpresses(self, id, playerInput) {
         var player = playersData[id].player;
 
         if (playersData[id].heroType == 'Wizz') {
-            console.log(playersData[id].Istationary);
+            //console.log(playersData[id].Istationary);
             if (playerInput.Q && playersData[id].Qcd <= 0 && playersData[id].Istationary == 0) {
                 console.log('Q pressed');
                 playersData[id].Qcd = WizzQcd;

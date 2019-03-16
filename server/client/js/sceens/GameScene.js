@@ -159,17 +159,17 @@ class GameScene extends Phaser.Scene {
                         else {
                             self.Qskill.anims.play('oncd', true);
                             setTimeout(() => {
-                                Qskill.anims.play('staticQ');
-                            }, 4000);
+                                self.Qskill.anims.play('staticQ', true);
+                            }, 7000);
                         }
                     }
                     if (skill == 'W') {
-                        if (InputData.Ion) self.Qskill.anims.play('staticW', true);
+                        if (InputData.Ion) self.Wskill.anims.play('staticW', true);
                         else {
                             self.Wskill.anims.play('onLcd', true);
                             setTimeout(() => {
-                                Wskill.anims.play('staticW');
-                            }, 8000);
+                                self.Wskill.anims.play('staticW', true);
+                            }, 14000);
                         }
                     }
                     if (skill == 'E') {
@@ -177,8 +177,8 @@ class GameScene extends Phaser.Scene {
                         else {
                             self.Eskill.anims.play('oncd', true);
                             setTimeout(() => {
-                                Eskill.anims.play('staticE');
-                            }, 4000);
+                                self.Eskill.anims.play('staticE', true);
+                            }, 7000);
                         }
                     }
                     if (skill == 'R') {
@@ -240,13 +240,14 @@ class GameScene extends Phaser.Scene {
     }
 
     drawLayers(self) {
-        self.map = self.add.tilemap('map');
-        var TilesetFull = self.map.addTilesetImage('TilesetFull', 'TilesetFull');
-        var tileset = self.map.addTilesetImage('32x32_map_tile_v1.0', '32x32_map_tile_v1.0');
-        for (var i = 0; i < self.map.layers.length; i++) {
-            layers[self.map.layers[i].name] = self.map.createDynamicLayer(i, TilesetFull);
-            layers[self.map.layers[i].name + '2'] = self.map.createDynamicLayer(i, tileset);
-        }
+        self.map = self.make.tilemap({ key: 'map' });
+        var tileset = self.map.addTilesetImage('tileset4', 'tileset');
+        layers[0] = self.map.createStaticLayer("base_layer", tileset, 0, 0);
+        layers[1] = self.map.createStaticLayer("partial_collision_layer", tileset, 0, 0);
+        layers[2] = self.map.createStaticLayer("full_collision_layer", tileset, 0, 0);
+
+
+
     }
     drawHUD(self) {
         self.hud = self.add.image(138, 576 - 36, 'hud').setScrollFactor(0).setDisplaySize(138 * 2, 36 * 2);

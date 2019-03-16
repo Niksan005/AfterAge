@@ -9,9 +9,8 @@ class LoadScene extends Phaser.Scene {
     preload() { // Loading All Assets That Are Used
 
 
-        this.load.tilemapTiledJSON('map', 'assets/map/TestMap1.2.json');
-        this.load.spritesheet('TilesetFull', 'assets/map/TilesetFull.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('32x32_map_tile_v1.0', 'assets/map/32x32_map_tile_v1.0.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.tilemapTiledJSON('map', 'assets/map/TilemapFull.json');
+        this.load.spritesheet('tileset', 'assets/map/tileset4.png', { frameWidth: 32, frameHeight: 32 });
 
 
         //this.load.image('Select', 'assets/sprites/loadingScreen/Selected.png')
@@ -29,7 +28,7 @@ class LoadScene extends Phaser.Scene {
         this.load.spritesheet('E', 'assets/sprites/E.png', { frameWidth: 100, frameHeight: 100 });
         this.load.image('hud', 'assets/sprites/USED_HUD.png');
         this.load.spritesheet('Qskill', 'assets/sprites/Qskill.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.image('Wskill', 'assets/sprites/Wskill.png');
+        this.load.spritesheet('Wskill', 'assets/sprites/Wskill.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('Eskill', 'assets/sprites/Eskill.png', { frameWidth: 32, frameHeight: 32 });
         this.load.image('Rskill', 'assets/sprites/Rskill.png');
 
