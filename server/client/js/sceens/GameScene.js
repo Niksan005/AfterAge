@@ -12,7 +12,7 @@ class GameScene extends Phaser.Scene {
         this.Name = a.Name;
         this.IMobile = a.IMobile;
         this.team = a.team;
-        //console.log(this.team);
+        console.log(a);
     }
 
     create() {
@@ -65,7 +65,7 @@ class GameScene extends Phaser.Scene {
                     if (playerId === player.playerId && player.playerId == self.myID) {
                         ShouldListen = false;
                         self.socket.disconnect();
-                        self.scene.start(CST.SCENES.LOAD);//, self.HeroType, self.Name, self.IMobile);
+                        self.scene.start(CST.SCENES.LOAD, { Name: self.Name, HeroType: self.HeroType, team: self.team, IMobile: self.IMobile });//, self.HeroType, self.Name, self.IMobile);
                         return;
                     }
                     if (playerId === player.playerId) {
