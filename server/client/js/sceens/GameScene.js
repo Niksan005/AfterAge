@@ -107,47 +107,49 @@ class GameScene extends Phaser.Scene {
             leaderBID[4] = 0;
 
             Object.keys(players).forEach(function (id) {
-                if (players[id] && players[id].playerId === player.playerId) {
-                    if (leaderBID[0] == 0 || (players[id].kills > players[leaderBID[0]] && id != leaderBID[0])) {
-                        leaderBID[4] = leaderBID[3];
-                        leaderBID[3] = leaderBID[2];
-                        leaderBID[2] = leaderBID[1];
-                        leaderBID[1] = leaderBID[0];
-                        leaderBID[0] = id;
-                    } else if (leaderBID[1] == 0 || (players[id].kills > players[leaderBID[1]] && id != leaderBID[1])) {
-                        leaderBID[4] = leaderBID[3];
-                        leaderBID[3] = leaderBID[2];
-                        leaderBID[2] = leaderBID[1];
-                        leaderBID[1] = id;
-                    } else if (leaderBID[2] == 0 || (players[id].kills > players[leaderBID[2]] && id != leaderBID[2])) {
-                        leaderBID[4] = leaderBID[3];
-                        leaderBID[3] = leaderBID[2];
-                        leaderBID[2] = id;
-                    } else if (leaderBID[3] == 0 || (players[id].kills > players[leaderBID[3]] && id != leaderBID[3])) {
-                        leaderBID[4] = leaderBID[3];
-                        leaderBID[3] = id;
-                    } else if (leaderBID[4] == 0 || (players[id].kills > players[leaderBID[4]] && id != leaderBID[4])) {
-                        leaderBID[4] = id;
+                self.players.getChildren().forEach(function (player) {
+                    if (players[id] && players[id].playerId === player.playerId) {
+                        if (leaderBID[0] == 0 || (players[id].kills > players[leaderBID[0]] && id != leaderBID[0])) {
+                            leaderBID[4] = leaderBID[3];
+                            leaderBID[3] = leaderBID[2];
+                            leaderBID[2] = leaderBID[1];
+                            leaderBID[1] = leaderBID[0];
+                            leaderBID[0] = id;
+                        } else if (leaderBID[1] == 0 || (players[id].kills > players[leaderBID[1]] && id != leaderBID[1])) {
+                            leaderBID[4] = leaderBID[3];
+                            leaderBID[3] = leaderBID[2];
+                            leaderBID[2] = leaderBID[1];
+                            leaderBID[1] = id;
+                        } else if (leaderBID[2] == 0 || (players[id].kills > players[leaderBID[2]] && id != leaderBID[2])) {
+                            leaderBID[4] = leaderBID[3];
+                            leaderBID[3] = leaderBID[2];
+                            leaderBID[2] = id;
+                        } else if (leaderBID[3] == 0 || (players[id].kills > players[leaderBID[3]] && id != leaderBID[3])) {
+                            leaderBID[4] = leaderBID[3];
+                            leaderBID[3] = id;
+                        } else if (leaderBID[4] == 0 || (players[id].kills > players[leaderBID[4]] && id != leaderBID[4])) {
+                            leaderBID[4] = id;
+                        }
+                        self.text1 && self.text1.destroy();
+                        self.text1 = self.add.text(12 * 64, 1 * 32, "1 : " + players[leaderBID[0]].Name + " - " + players[leaderBID[0]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
+                        if (leaderBID[1] != 0) {
+                            self.text2 && self.text2.destroy();
+                            self.text2 = self.add.text(12 * 64, 2 * 32, "2 : " + players[leaderBID[1]].Name + " - " + players[leaderBID[1]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
+                        }
+                        if (leaderBID[2] != 0) {
+                            self.text3 && self.text3.destroy();
+                            self.text3 = self.add.text(12 * 64, 3 * 32, "3 : " + players[leaderBID[2]].Name + " - " + players[leaderBID[2]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
+                        }
+                        if (leaderBID[3] != 0) {
+                            self.text4 && self.text4.destroy();
+                            self.text4 = self.add.text(12 * 64, 4 * 32, "4 : " + players[leaderBID[3]].Name + " - " + players[leaderBID[3]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
+                        }
+                        if (leaderBID[4] != 0) {
+                            self.text5 && self.text5.destroy();
+                            self.text5 = self.add.text(12 * 64, 5 * 32, "5 : " + players[leaderBID[4]].Name + " - " + players[leaderBID[4]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
+                        }
                     }
-                    self.text1 && self.text1.destroy();
-                    self.text1 = self.add.text(12 * 64, 1 * 32, "1 : " + players[leaderBID[0]].Name + " - " + players[leaderBID[0]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
-                    if (leaderBID[1] != 0) {
-                        self.text2 && self.text2.destroy();
-                        self.text2 = self.add.text(12 * 64, 2 * 32, "2 : " + players[leaderBID[1]].Name + " - " + players[leaderBID[1]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
-                    }
-                    if (leaderBID[2] != 0) {
-                        self.text3 && self.text3.destroy();
-                        self.text3 = self.add.text(12 * 64, 3 * 32, "3 : " + players[leaderBID[2]].Name + " - " + players[leaderBID[2]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
-                    }
-                    if (leaderBID[3] != 0) {
-                        self.text4 && self.text4.destroy();
-                        self.text4 = self.add.text(12 * 64, 4 * 32, "4 : " + players[leaderBID[3]].Name + " - " + players[leaderBID[3]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
-                    }
-                    if (leaderBID[4] != 0) {
-                        self.text5 && self.text5.destroy();
-                        self.text5 = self.add.text(12 * 64, 5 * 32, "5 : " + players[leaderBID[4]].Name + " - " + players[leaderBID[4]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
-                    }
-                }
+                });
             });
         });
 
