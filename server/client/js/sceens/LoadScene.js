@@ -121,22 +121,22 @@ class LoadScene extends Phaser.Scene {
         this.Robot = this.add.sprite(15 * 64, 8 * 64, 'sprite')
             .setDisplaySize(100, 100)
             .setInteractive()
-            .on('pointerdown', () => this.SelectWizz(this.selected2, this.HeroType));
+            .on('pointerdown', () => this.SelectWizz(this.selected2, this));
         this.Robot.anims.play('Robot', true);
 
         this.RobotTank = this.add.sprite(13 * 64, 8 * 64, 'spriteTank')
             .setDisplaySize(100, 100)
             .setInteractive()
-            .on('pointerdown', () => this.SelectTank(this.selected2, this.HeroType));
+            .on('pointerdown', () => this.SelectTank(this.selected2, this));
         this.RobotTank.anims.play('RobotTank', true);
     }
 
     SelectWizz(s, h) {
-        h = 'Wizz';
+        h.HeroType = 'Wizz';
         s.x = 15 * 64;
     }
-    SelectTank(s) {
-        h = 'Tank';
+    SelectTank(s, h) {
+        h.HeroType = 'Tank';
         s.x = 13 * 64;
     }
 }

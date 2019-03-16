@@ -161,7 +161,7 @@ function update() {
             playersData[player.playerId].player.setVelocityX(0);
             playersData[player.playerId].player.setVelocityY(0);
             if (playersData[player.playerId].MSpeed == 100) {
-                playersData[player.playerId].lastMoved = 'static';
+                playersData[player.playerId].lastMoved = 'static' + playersData[player.playerId].heroType;
                 if (playersData[player.playerId].InR) {
                     playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
                 }
@@ -171,7 +171,7 @@ function update() {
                 XY[player.playerId].x = player.x;
                 XY[player.playerId].y = player.y;
 
-                playersData[player.playerId].lastMoved = 'Wstatic';
+                playersData[player.playerId].lastMoved = 'Wstatic' + playersData[player.playerId].heroType;
                 if (playersData[player.playerId].InR) {
                     playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
                 }
@@ -190,7 +190,7 @@ function update() {
             playersData[player.playerId].Istationary -= 1;
             player.setVelocityX(0);
             player.setVelocityY(0);
-            playersData[player.playerId].lastMoved = 'stunned';
+            playersData[player.playerId].lastMoved = 'stunned' + playersData[player.playerId].heroType;
             if (playersData[player.playerId].InR) {
                 playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
             }
@@ -209,7 +209,7 @@ function update() {
             if (player.x > x - 25 && player.x < x + 25 && player.y > y - 25 && player.y < y + 25 && playersData[player.playerId].team != playersData[Qs[i].id].team) {
                 playersData[player.playerId].Istationary += EstunDuration;
                 playersData[Qs[i].id].Ecd = 0;
-                playersData[player.playerId].lastMoved = 'stunned';
+                playersData[player.playerId].lastMoved = 'stunned' + playersData[player.playerId].heroType;
                 if (playersData[player.playerId].InR) {
                     playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
                 }
@@ -300,24 +300,24 @@ function handlePlayerInput(self, playerId, input) {
         if (playersData[player.playerId]) self.physics.moveToObject(player, { x: playersData[player.playerId].endX, y: playersData[player.playerId].endY }, playersData[player.playerId].MSpeed);
         if (player.x > playersData[player.playerId].endX) {
             if (playersData[playerId].MSpeed == 100) {
-                playersData[playerId].lastMoved = 'left';
+                playersData[playerId].lastMoved = 'left' + playersData[player.playerId].heroType;
                 if (playersData[player.playerId].InR) {
                     playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
                 }
             } else {
-                playersData[playerId].lastMoved = 'Wleft';
+                playersData[playerId].lastMoved = 'Wleft' + playersData[player.playerId].heroType;
                 if (playersData[player.playerId].InR) {
                     playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
                 }
             }
         } else {
             if (playersData[playerId].MSpeed == 100) {
-                playersData[playerId].lastMoved = 'right';
+                playersData[playerId].lastMoved = 'right' + playersData[player.playerId].heroType;
                 if (playersData[player.playerId].InR) {
                     playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
                 }
             } else {
-                playersData[playerId].lastMoved = 'Wright';
+                playersData[playerId].lastMoved = 'Wright' + playersData[player.playerId].heroType;
                 if (playersData[player.playerId].InR) {
                     playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
                 }

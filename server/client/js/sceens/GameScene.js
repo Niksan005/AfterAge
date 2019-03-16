@@ -25,9 +25,10 @@ class GameScene extends Phaser.Scene {
 
     create() {
         var self = this;
+        this.animsa(self);
         ShouldListen = true;
         this.socket = io();
-        //console.log(this.team);
+        console.log(this.HeroType);
         this.socket.emit('createPlayer', this.Name, this.HeroType, this.team);
 
         this.players = this.add.group();
@@ -339,6 +340,121 @@ class GameScene extends Phaser.Scene {
         self.Wskill = self.add.sprite(36 + 1 * 67, 540, 'Wskill').setScrollFactor(0).setDisplaySize(64, 64);
         self.Eskill = self.add.sprite(36 + 2 * 67, 540, 'Eskill').setScrollFactor(0).setDisplaySize(64, 64);
         self.Rskill = self.add.sprite(36 + 3 * 67, 540, 'Rskill').setScrollFactor(0).setDisplaySize(64, 64);
+
+    }
+    setCamera(self) {
+
+        self.cameras.main.setBounds(0, 0, self.map.widthInPixels, self.map.heightInPixels);
+    }
+
+    displayPlayers(self, playerInfo) {
+        var sprite = playerInfo.heroType == 'Wizz' ? 'sprite' : 'spriteTank';
+
+        const player = self.add.sprite(playerInfo.x, playerInfo.y, sprite).setOrigin(0.5, 0.5).setDisplaySize(50, 50);
+        player.playerId = playerInfo.playerId;
+        console.log('static' + playerInfo.heroType);
+        player.anims.play('static' + playerInfo.heroType);
+        player.nameText = self.add.text(playerInfo.x - 25, playerInfo.y - 30, playerInfo.name, { fontSize: '10px', fill: '#000', fontWeight: 'bold' });
+        player.Name = playerInfo.name;
+        var rect = new Phaser.Geom.Rectangle(0, 0, playerInfo.hp / 2, 5);
+        //console.log(playerInfo.hp);
+        if (playerInfo.team == 'blue') {
+            player.HP = self.add.graphics({ fillStyle: { color: 0x1111ff } });
+        } else if (playerInfo.team == 'red') {
+            player.HP = self.add.graphics({ fillStyle: { color: 0xff1111 } });
+        } else if (playerInfo.team == 'green') {
+            player.HP = self.add.graphics({ fillStyle: { color: 0x11ff11 } });
+        } else {
+            player.HP = self.add.graphics({ fillStyle: { color: 0xffa200 } });
+        }
+        player.HP.fillRectShape(rect);
+
+        self.players.add(player);
+    }
+
+    animsa(self) {
+
+        self.anims.create({
+            key: 'leftWizz',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 8, end: 15 }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        self.anims.create({
+            key: 'rightWizz',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 0, end: 7 }),
+            frameRate: 12,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'staticWizz',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 16, end: 19 }),
+            frameRate: 4,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'stunnedWizz',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 20, end: 43 }),
+            frameRate: 12,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'WstaticWizz',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 60, end: 63 }),
+            frameRate: 12,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'WleftWizz',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 52, end: 59 }),
+            frameRate: 12,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'WrightWizz',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 44, end: 51 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        // R VVV
+        self.anims.create({
+            key: 'WrightWizzR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 64, end: 71 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'rightWizzR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 64, end: 71 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'WleftWizzR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 72, end: 79 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'leftWizzR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 72, end: 79 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'staticWizzR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 80, end: 83 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'WstaticWizzR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 80, end: 83 }),
+            frameRate: 24,
+            repeat: -1
+        });
+
         self.anims.create({
             key: 'oncd',
             frames: self.anims.generateFrameNumbers('cd', { start: 0, end: 24 }),
@@ -385,120 +501,36 @@ class GameScene extends Phaser.Scene {
             repeat: -1
         });
 
-    }
-    setCamera(self) {
 
-        self.cameras.main.setBounds(0, 0, self.map.widthInPixels, self.map.heightInPixels);
-        self.fullScreen = self.add.image(32, 32, 'fullScreen').setScrollFactor(0);
-        self.fullScreen.setInteractive().on('pointerdown', function () {
-            if (self.scene.scale.isFullscreen) {
-                self.scene.scale.stopFullscreen();
-            } else {
-                self.scene.scale.startFullscreen();
-            }
-        });
-    }
 
-    displayPlayers(self, playerInfo) {
-        const player = self.add.sprite(playerInfo.x, playerInfo.y, 'sprite').setOrigin(0.5, 0.5).setDisplaySize(50, 50);
-        player.playerId = playerInfo.playerId;
+
+
+
         self.anims.create({
-            key: 'left',
-            frames: self.anims.generateFrameNumbers('sprite', { start: 8, end: 15 }),
-            frameRate: 12,
+            key: 'leftTank',
+            frames: self.anims.generateFrameNumbers('spriteTank', { start: 40, end: 42 }),
+            frameRate: 24,
             repeat: -1
         });
 
         self.anims.create({
-            key: 'right',
-            frames: self.anims.generateFrameNumbers('sprite', { start: 0, end: 7 }),
-            frameRate: 12,
+            key: 'rightTank',
+            frames: self.anims.generateFrameNumbers('spriteTank', { start: 35, end: 37 }),
+            frameRate: 24,
             repeat: -1
         });
         self.anims.create({
-            key: 'static',
-            frames: self.anims.generateFrameNumbers('sprite', { start: 16, end: 19 }),
+            key: 'staticTank',
+            frames: self.anims.generateFrameNumbers('spriteTank', { start: 10, end: 17 }),
             frameRate: 4,
             repeat: -1
         });
         self.anims.create({
-            key: 'stunned',
-            frames: self.anims.generateFrameNumbers('sprite', { start: 20, end: 43 }),
+            key: 'stunnedTank',
+            frames: self.anims.generateFrameNumbers('spriteTank', { start: 20, end: 34 }),
             frameRate: 12,
             repeat: -1
         });
-        self.anims.create({
-            key: 'Wstatic',
-            frames: self.anims.generateFrameNumbers('sprite', { start: 60, end: 63 }),
-            frameRate: 12,
-            repeat: -1
-        });
-        self.anims.create({
-            key: 'Wleft',
-            frames: self.anims.generateFrameNumbers('sprite', { start: 52, end: 59 }),
-            frameRate: 12,
-            repeat: -1
-        });
-        self.anims.create({
-            key: 'Wright',
-            frames: self.anims.generateFrameNumbers('sprite', { start: 44, end: 51 }),
-            frameRate: 24,
-            repeat: -1
-        });
-        // R VVV
-        self.anims.create({
-            key: 'WrightR',
-            frames: self.anims.generateFrameNumbers('sprite', { start: 64, end: 71 }),
-            frameRate: 24,
-            repeat: -1
-        });
-        self.anims.create({
-            key: 'rightR',
-            frames: self.anims.generateFrameNumbers('sprite', { start: 64, end: 71 }),
-            frameRate: 24,
-            repeat: -1
-        });
-        self.anims.create({
-            key: 'WleftR',
-            frames: self.anims.generateFrameNumbers('sprite', { start: 72, end: 79 }),
-            frameRate: 24,
-            repeat: -1
-        });
-        self.anims.create({
-            key: 'leftR',
-            frames: self.anims.generateFrameNumbers('sprite', { start: 72, end: 79 }),
-            frameRate: 24,
-            repeat: -1
-        });
-        self.anims.create({
-            key: 'staticR',
-            frames: self.anims.generateFrameNumbers('sprite', { start: 80, end: 83 }),
-            frameRate: 24,
-            repeat: -1
-        });
-        self.anims.create({
-            key: 'WstaticR',
-            frames: self.anims.generateFrameNumbers('sprite', { start: 80, end: 83 }),
-            frameRate: 24,
-            repeat: -1
-        });
-        player.anims.play('static');
-        player.nameText = self.add.text(playerInfo.x - 25, playerInfo.y - 30, playerInfo.name, { fontSize: '10px', fill: '#000', fontWeight: 'bold' });
-        player.Name = playerInfo.name;
-        var rect = new Phaser.Geom.Rectangle(0, 0, playerInfo.hp / 2, 5);
-        //console.log(playerInfo.hp);
-        if (playerInfo.team == 'blue') {
-            player.HP = self.add.graphics({ fillStyle: { color: 0x1111ff } });
-        } else if (playerInfo.team == 'red') {
-            player.HP = self.add.graphics({ fillStyle: { color: 0xff1111 } });
-        } else if (playerInfo.team == 'green') {
-            player.HP = self.add.graphics({ fillStyle: { color: 0x11ff11 } });
-        } else {
-            player.HP = self.add.graphics({ fillStyle: { color: 0xffa200 } });
-        }
-        player.HP.fillRectShape(rect);
-
-        self.players.add(player);
     }
 }
 export { GameScene };
