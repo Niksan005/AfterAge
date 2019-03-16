@@ -176,16 +176,6 @@ function update() {
                 io.emit('cdChange', { id: player.playerId, skill: 'E', Ion: true });
                 player.setVelocityX(0);
                 player.setVelocityY(0);
-                io.emit('updateHP', { playerId: player.playerId, hp: playersData[player.playerId].hp });
-                //theE.destroy();
-                if (playersData[player.playerId].hp <= 0) {
-                    if (playersData[player.playerId].InR) {
-                        playersData[player.playerId].hp = 10;
-                    }
-                    io.emit('disconnect', player.playerId);
-                    removePlayer(self, player.playerId);
-                    delete playersData[player.playerId];
-                }
                 removeQ(i);
             }
         });
@@ -220,8 +210,11 @@ function addPlayer(self, playerInfo) {
 function newFunction(player1, self, player2) {
     if (playersData[player1.playerId] && playersData[player1.playerId].hp > 0) {
         playersData[player1.playerId].hp -= 1;
+        if (playersData[player1.playerId] < 10 && playersData[player1.playerId].InR) {
+            playersData[player1.playerId].hp = 10;
+        }
         io.emit('updateHP', { playerId: player1.playerId, hp: playersData[player1.playerId].hp });
-        if (playersData[player1.playerId].hp < 1) {
+        if (playersData[player1.playerId].hp < 1 && !playersData[player1.playerId].InR) {
             io.emit('disconnect', player1.playerId);
             removePlayer(self, player1.playerId);
             delete playersData[player1.playerId];
@@ -310,10 +303,12 @@ function handleQWERpresses(self, id, playerInput) {
                 console.log('R pressed');
                 playersData[id].Rcd = WizzRcd;
                 playersData[id].RstateSend = false;
+                playersData[id].InR = true;
+                setTimeout(() => {
+                    if (playersData[id])
+                        playersData[id].InR = false;
+                }, 5000);
                 io.emit('cdChange', { id: id, skill: 'R', Ion: false });
-                playersData[id].Qcd = 100000;
-                playersData[id].Wcd = 100000;
-                playersData[id].Ecd = 100000;
             }
         }
     }
@@ -353,10 +348,13 @@ function dealEdmg(self, id, wx, wy) {
                 if (playersData[id].hp <= 90) playersData[id].hp += 10;
                 else playersData[id].hp = 100;
                 //console.log(playersData[player.playerId].hp);
+                if (playersData[player.playerId].hp < 10 && playersData[player.playerId].InR) {
+                    playersData[player.playerId].hp = 10;
+                }
                 io.emit('updateHP', { playerId: player.playerId, hp: playersData[player.playerId].hp });
                 io.emit('updateHP', { playerId: id, hp: playersData[id].hp });
                 //theE.destroy();
-                if (playersData[player.playerId].hp <= 0) {
+                if (playersData[player.playerId].hp <= 0 && !playersData[player.playerId].InR) {
                     io.emit('disconnect', player.playerId);
                     removePlayer(self, player.playerId);
                     delete playersData[player.playerId];
