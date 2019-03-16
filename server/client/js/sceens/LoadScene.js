@@ -53,7 +53,7 @@ class LoadScene extends Phaser.Scene {
             .on('pointerdown', () => this.team = 'blue');
         this.flagGreen = this.add.image(3 * 80, 15 * 32, 'flagGreen')
             .setInteractive()
-            .on('pointerdown', () => this.team = 'blue');
+            .on('pointerdown', () => this.team = 'green');
         this.flagYellow = this.add.image(4 * 80, 15 * 32, 'flagYellow')
             .setInteractive()
             .on('pointerdown', () => this.team = 'yellow');

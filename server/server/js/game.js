@@ -63,8 +63,8 @@ function create() {
 
             console.log('a user connected');
             // create a new player and add it to our players object
-            var startX = Math.floor(Math.random() * 700) + 50;
-            var startY = Math.floor(Math.random() * 500) + 50;
+            var startX = Math.floor(Math.random() * 1400) + 600;
+            var startY = Math.floor(Math.random() * 1400) + 600;
             playersData[socket.id] = {
                 x: startX,
                 y: startY,
@@ -222,7 +222,7 @@ function newFunction(player1, self, player2) {
         if (playersData[player1.playerId] < 10 && playersData[player1.playerId].InR) {
             playersData[player1.playerId].hp = 10;
         }
-        io.emit('updateHP', { playerId: player1.playerId, hp: playersData[player1.playerId].hp });
+        io.emit('updateHP', { playerId: player1.playerId, hp: playersData[player1.playerId].hp, team: playersData[player1.playerId].team });
         if (playersData[player1.playerId].hp < 1 && !playersData[player1.playerId].InR) {
             io.emit('disconnect', player1.playerId);
             removePlayer(self, player1.playerId);
@@ -230,7 +230,7 @@ function newFunction(player1, self, player2) {
             playersData[player2.playerId].hp += Math.round(Math.random() * 100);
             if (playersData[player2.playerId].hp > 100)
                 playersData[player2.playerId].hp = 100;
-            io.emit('updateHP', { playerId: player2.playerId, hp: playersData[player2.playerId].hp });
+            io.emit('updateHP', { playerId: player2.playerId, hp: playersData[player2.playerId].hp, team: playersData[player2.playerId].team });
         }
     }
 }
@@ -284,7 +284,7 @@ function handleQWERpresses(self, id, playerInput) {
                 playersData[id].MSpeed = 200;
                 playersData[id].hp += 40;
                 if (playersData[id].hp > 100) playersData[id].hp = 100;
-                io.emit('updateHP', { playerId: id, hp: playersData[id].hp });
+                io.emit('updateHP', { playerId: id, hp: playersData[id].hp, team: playersData[id].team });
                 self.physics.moveToObject(player, { x: playersData[id].endX, y: playersData[id].endY }, playersData[id].MSpeed);
 
                 if (Phaser.Math.Distance.Between(player.x, player.y, playersData[player.playerId].endX, playersData[player.playerId].endY) < 5) {
@@ -360,8 +360,8 @@ function dealEdmg(self, id, wx, wy) {
                 if (playersData[player.playerId].hp < 10 && playersData[player.playerId].InR) {
                     playersData[player.playerId].hp = 10;
                 }
-                io.emit('updateHP', { playerId: player.playerId, hp: playersData[player.playerId].hp });
-                io.emit('updateHP', { playerId: id, hp: playersData[id].hp });
+                io.emit('updateHP', { playerId: player.playerId, hp: playersData[player.playerId].hp, team: playersData[player.playerId].team });
+                io.emit('updateHP', { playerId: id, hp: playersData[id].hp, team: playersData[id].team });
                 //theE.destroy();
                 if (playersData[player.playerId].hp <= 0 && !playersData[player.playerId].InR) {
                     io.emit('disconnect', player.playerId);
