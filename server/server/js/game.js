@@ -253,7 +253,7 @@ function addPlayer(self, playerInfo) {
     self.players.add(player);
     playersData[player.playerId].player = player;
     //self.physics.add.collider(player, layers);
-    self.physics.add.collider(player, layers[1]);
+    if(playersData[player.playerId].heroType == 'Wizz') self.physics.add.collider(player, layers[1]);
     self.physics.add.collider(player, layers[2]);
     self.physics.add.collider(player, self.players, function (player1, player2) {
         if (playersData[player2.playerId] && playersData[player2.playerId].Istationary == 0 && playersData[player1.playerId].team != playersData[player2.playerId].team) newFunction(player1, self, player2);
