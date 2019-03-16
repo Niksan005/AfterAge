@@ -4,7 +4,7 @@ var layers = {};
 const WizzQcd = 400;
 const WizzWcd = 800;
 const WizzEcd = 400;
-const WizzRcd = 10;
+const WizzRcd = 8000;
 const EstunDuration = 50;
 const rangeE = 200;
 
@@ -125,6 +125,9 @@ function create() {
             handleQWERpresses(self, socket.id, inputData);
         });
     });
+
+    UpdateXYToPlayers();
+
 }
 
 function update() {
@@ -186,8 +189,13 @@ function update() {
 
         //console.log(Qs[i].ball.x + ' : ' + Qs[i].ball.y + ' -- ' + Qs[i].endX + ' : ' + Qs[i].endY);
     }
+}
 
+function UpdateXYToPlayers() {
     io.emit('playerUpdates', playersData);
+    setTimeout(() => {
+        UpdateXYToPlayers();
+    }, 50);
 }
 
 
