@@ -99,6 +99,7 @@ class GameScene extends Phaser.Scene {
 
                         if (player.anims.currentAnim.key != players[id].lastMoved) {
                             player.anims.play(players[id].lastMoved);
+                            console.log(players[id].lastMoved);
                         }
                     }
                 });
@@ -365,6 +366,43 @@ class GameScene extends Phaser.Scene {
         self.anims.create({
             key: 'Wright',
             frames: self.anims.generateFrameNumbers('sprite', { start: 44, end: 51 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        // R VVV
+        self.anims.create({
+            key: 'WrightR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 64, end: 71 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'rightR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 64, end: 71 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'WleftR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 72, end: 79 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'leftR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 72, end: 79 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'staticR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 80, end: 83 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'WstaticR',
+            frames: self.anims.generateFrameNumbers('sprite', { start: 80, end: 83 }),
             frameRate: 24,
             repeat: -1
         });

@@ -142,11 +142,17 @@ function update() {
             playersData[player.playerId].player.setVelocityY(0);
             if (playersData[player.playerId].MSpeed == 100) {
                 playersData[player.playerId].lastMoved = 'static';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
             } else {
                 playersData[player.playerId].x = player.x;
                 playersData[player.playerId].y = player.y;
 
                 playersData[player.playerId].lastMoved = 'Wstatic';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
             }
         }
 
@@ -163,9 +169,9 @@ function update() {
             player.setVelocityX(0);
             player.setVelocityY(0);
             playersData[player.playerId].lastMoved = 'stunned';
-        }
-        if (playersData[player.playerId].InR) {
-            playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+            if (playersData[player.playerId].InR) {
+                playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+            }
         }
         playersData[player.playerId].x = player.x;
         playersData[player.playerId].y = player.y;
@@ -177,6 +183,9 @@ function update() {
                 playersData[player.playerId].Istationary += EstunDuration;
                 playersData[Qs[i].id].Ecd = 0;
                 playersData[player.playerId].lastMoved = 'stunned';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
                 io.emit('cdChange', { id: player.playerId, skill: 'E', Ion: true });
                 player.setVelocityX(0);
                 player.setVelocityY(0);
@@ -249,14 +258,26 @@ function handlePlayerInput(self, playerId, input) {
         if (player.x > playersData[player.playerId].endX) {
             if (playersData[playerId].MSpeed == 100) {
                 playersData[playerId].lastMoved = 'left';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
             } else {
                 playersData[playerId].lastMoved = 'Wleft';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
             }
         } else {
             if (playersData[playerId].MSpeed == 100) {
                 playersData[playerId].lastMoved = 'right';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
             } else {
                 playersData[playerId].lastMoved = 'Wright';
+                if (playersData[player.playerId].InR) {
+                    playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                }
             }
         }
     }
