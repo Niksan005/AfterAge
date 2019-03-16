@@ -127,15 +127,15 @@ class GameScene extends Phaser.Scene {
                         }
                         if (leaderBID[2] != 0) {
                             self.text3 && self.text3.destroy();
-                            self.text3 = self.add.text(12 * 64, 2 * 32, "3 : " + players[leaderBID[2]].Name + " - " + players[leaderBID[2]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
+                            self.text3 = self.add.text(12 * 64, 3 * 32, "3 : " + players[leaderBID[2]].Name + " - " + players[leaderBID[2]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
                         }
                         if (leaderBID[3] != 0) {
                             self.text4 && self.text4.destroy();
-                            self.text4 = self.add.text(12 * 64, 2 * 32, "4 : " + players[leaderBID[3]].Name + " - " + players[leaderBID[3]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
+                            self.text4 = self.add.text(12 * 64, 4 * 32, "4 : " + players[leaderBID[3]].Name + " - " + players[leaderBID[3]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
                         }
                         if (leaderBID[4] != 0) {
                             self.text5 && self.text5.destroy();
-                            self.text5 = self.add.text(12 * 64, 2 * 32, "5 : " + players[leaderBID[4]].Name + " - " + players[leaderBID[4]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
+                            self.text5 = self.add.text(12 * 64, 5 * 32, "5 : " + players[leaderBID[4]].Name + " - " + players[leaderBID[4]].kills, { fontSize: '20px', fill: '#000', fontWeight: 'bold' }).setScrollFactor(0);;
                         }
                     }
                 });
