@@ -583,6 +583,12 @@ class GameScene extends Phaser.Scene {
             repeat: -1
         });
 
+        self.anims.create({
+            key: 'RTbulletA',
+            frames: self.anims.generateFrameNumbers('RTbullet', { start: 0, end: 1 }),
+            frameRate: 24,
+            repeat: -1
+        });
 
     }
 }

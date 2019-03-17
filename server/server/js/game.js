@@ -227,9 +227,89 @@ function update() {
         if (Phaser.Math.Distance.Between(Qs[i].ball.x, Qs[i].ball.y, Qs[i].endX, Qs[i].endY) < 5) {
             removeQ(i);
         }
+    }
+    for (var i = 0; i < TankShotsBR; i += 1) {
+        this.players.getChildren().forEach((player) => {
+            if (TankShots[i]) {
+                var x = TankShots[i].ball.x, y = TankShots[i].ball.y;
+                if (player.x > x - 25 && player.x < x + 25 && player.y > y - 25 && player.y < y + 25 && playersData[player.playerId].team != playersData[TankShots[i].id].team) {
+                    if (TankShots[i].shotType == 'QTbullet') {
+                        playersData[player.playerId].hp -= 20;
 
+                        if (playersData[player.playerId] < 10 && playersData[player.playerId].InR) {
+                            playersData[player.playerId].hp = 10;
+                        }
+                        io.emit('updateHP', { playerId: player.playerId, hp: playersData[player.playerId].hp, team: playersData[player.playerId].team });
+                        if (playersData[player.playerId].hp < 1 && !playersData[player.playerId].InR) {
+                            io.emit('disconnect', player.playerId);
+                            removePlayer(self, player.playerId);
+                            delete playersData[player.playerId];
+                            delete XY[player.playerId];
 
-        //console.log(Qs[i].ball.x + ' : ' + Qs[i].ball.y + ' -- ' + Qs[i].endX + ' : ' + Qs[i].endY);
+                            playersData[TankShots[i].id].kills++;
+
+                            XY[TankShots[i].id].kills = playersData[TankShots[i].id].kills;
+                            io.emit('upLeaderB', XY);
+                        }
+                        removeTankShot(i);
+                    }
+                    if (TankShots[i].shotType == 'WTbullet') {
+                        playersData[player.playerId].hp -= 10;
+                        playersData[TankShots[i].id].hp += 10;
+                        if (playersData[TankShots[i].id].hp > 100) playersData[TankShots[i].id].hp = 100;
+                        if (playersData[player.playerId] < 10 && playersData[player.playerId].InR) {
+                            playersData[player.playerId].hp = 10;
+                        }
+                        io.emit('updateHP', { playerId: player.playerId, hp: playersData[player.playerId].hp, team: playersData[player.playerId].team });
+                        if (playersData[player.playerId].hp < 1 && !playersData[player.playerId].InR) {
+                            io.emit('disconnect', player.playerId);
+                            removePlayer(self, player.playerId);
+                            delete playersData[player.playerId];
+                            delete XY[player.playerId];
+
+                            playersData[TankShots[i].id].kills++;
+
+                            XY[TankShots[i].id].kills = playersData[TankShots[i].id].kills;
+                            io.emit('upLeaderB', XY);
+                        }
+                        removeTankShot(i);
+                    }
+                    if (TankShots[i].shotType == 'ETbullet') {
+                        playersData[player.playerId].Istationary += EstunDuration;
+                        playersData[player.playerId].lastMoved = 'stunned' + playersData[player.playerId].heroType;
+                        if (playersData[player.playerId].InR) {
+                            playersData[player.playerId].lastMoved = playersData[player.playerId].lastMoved + 'R';
+                        }
+                        player.setVelocityX(0);
+                        player.setVelocityY(0);
+
+                        removeTankShot(i);
+                    }
+                    if (TankShots[i].shotType == 'RTbullet') {
+                        playersData[player.playerId].hp -= 50;
+
+                        if (playersData[player.playerId] < 10 && playersData[player.playerId].InR) {
+                            playersData[player.playerId].hp = 10;
+                        }
+                        io.emit('updateHP', { playerId: player.playerId, hp: playersData[player.playerId].hp, team: playersData[player.playerId].team });
+                        if (playersData[player.playerId].hp < 1 && !playersData[player.playerId].InR) {
+                            io.emit('disconnect', player.playerId);
+                            removePlayer(self, player.playerId);
+                            delete playersData[player.playerId];
+                            delete XY[player.playerId];
+
+                            playersData[TankShots[i].id].kills++;
+
+                            XY[TankShots[i].id].kills = playersData[TankShots[i].id].kills;
+                            io.emit('upLeaderB', XY);
+                        }
+                    }
+                }
+            }
+        });
+        if (Phaser.Math.Distance.Between(TankShots[i].ball.x, TankShots[i].ball.y, TankShots[i].endX, TankShots[i].endY) < 5) {
+            removeTankShot(i);
+        }
     }
 }
 
@@ -420,6 +500,8 @@ function handleQWERpresses(self, id, playerInput) {
                 playersData[id].Rcd = WizzRcd;
                 playersData[id].RstateSend = false;
                 io.emit('cdChange', { id: id, skill: 'R', Ion: false });
+                var tempXY = getXYwithRange(player, playerInput, 500, true);
+                createTankShot(self, { x: playersData[id].x, y: playersData[id].y }, tempXY, id, 'RTbullet');
             }
         }
     }
@@ -461,12 +543,14 @@ function createTankShot(self, beginXY, endXY, playerId, TankShot) {
 }
 
 function removeTankShot(index) {
-    TankShots[index].ball.destroy();
-    for (var i = index; i < TankShotsBR - 1; i += 1) {
-        TankShots[i] = TankShots[i + 1];
+    if (TankShots[index]) {
+        TankShots[index].ball.destroy();
+        for (var i = index; i < TankShotsBR - 1; i += 1) {
+            TankShots[i] = TankShots[i + 1];
+        }
+        TankShotsBR--;
+        io.emit('removeTankShot', index);
     }
-    TankShotsBR--;
-    io.emit('removeTankShot', index);
 }
 
 function resetMSpeed(player) {

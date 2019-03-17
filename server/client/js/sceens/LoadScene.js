@@ -54,11 +54,14 @@ class LoadScene extends Phaser.Scene {
         this.load.spritesheet('QTdeadAnims', 'assets/sprites/bulletDeath.png', { frameWidth: 64, frameHeight: 32 });
 
 
-        this.load.spritesheet('WTbullet', 'assets/sprites/slowingBulletSpriteSheet.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('WTdeadAnims', 'assets/sprites/slowingBulletDeath.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('WTbullet', 'assets/sprites/slowingBulletSpriteSheet.png', { frameWidth: 50, frameHeight: 50 });
+        this.load.spritesheet('WTdeadAnims', 'assets/sprites/slowingBulletDeath.png', { frameWidth: 50, frameHeight: 50 });
 
         this.load.spritesheet('ETbullet', 'assets/sprites/stunBulletSpriteSheet.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('ETdeadAnims', 'assets/sprites/stunBulletDeathSpriteSheet.png', { frameWidth: 32, frameHeight: 32 });
+
+        this.load.spritesheet('RTbullet', 'assets/sprites/bigBullet.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('RTdeadAnims', 'assets/sprites/bulletDeath.png', { frameWidth: 32, frameHeight: 32 });
 
         this.load.spritesheet('sprite', 'assets/sprites/AeraxSpriteSheet.png', { frameWidth: 50, frameHeight: 50 });
         this.load.spritesheet('spriteTank', 'assets/sprites/tankspritesheet.png', { frameWidth: 50, frameHeight: 50 });
