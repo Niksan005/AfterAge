@@ -286,7 +286,7 @@ function update() {
                         removeTankShot(i);
                     }
                     if (TankShots[i].shotType == 'RTbullet' && playersData[player.playerId]) {
-                        playersData[player.playerId].hp -= 1;
+                        playersData[player.playerId].hp -= 10;
 
                         if (playersData[player.playerId] < 10 && playersData[player.playerId].InR) {
                             playersData[player.playerId].hp = 10;
