@@ -232,7 +232,7 @@ function update() {
         this.players.getChildren().forEach((player) => {
             if (TankShots[i]) {
                 var x = TankShots[i].ball.x, y = TankShots[i].ball.y;
-                if (player.x > x - 25 && player.x < x + 25 && player.y > y - 25 && player.y < y + 25 && playersData[player.playerId].team != playersData[TankShots[i].id].team) {
+                if (player.x > x - 25 && player.x < x + 25 && player.y > y - 25 && player.y < y + 25 && playersData[player.playerId] &&playersData[TankShots[i].id] && playersData[player.playerId].team != playersData[TankShots[i].id].team) {
                     console.log(TankShots[i].shotType);
                     if (TankShots[i].shotType == 'QTbullet') {
                         playersData[player.playerId].hp -= 20;
