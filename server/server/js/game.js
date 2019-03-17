@@ -233,7 +233,7 @@ function update() {
             if (TankShots[i]) {
                 var x = TankShots[i].ball.x, y = TankShots[i].ball.y;
                 if (player.x > x - 25 && player.x < x + 25 && player.y > y - 25 && player.y < y + 25 && playersData[player.playerId].team != playersData[TankShots[i].id].team) {
-                    if (TankShots[i].shotType == 'QTbullet' && playersData[player.playerId]) {
+                    if (TankShots[i].shotType == 'QTbullet' && playersData[player.playerId] && TankShots[i]) {
                         playersData[player.playerId].hp -= 20;
 
                         if (playersData[player.playerId] < 10 && playersData[player.playerId].InR) {
@@ -253,7 +253,7 @@ function update() {
                         }
                         removeTankShot(i);
                     }
-                    if (TankShots[i].shotType == 'WTbullet && playersData[player.playerId]') {
+                    if (TankShots[i].shotType == 'WTbullet' && playersData[player.playerId] && TankShots[i]) {
                         playersData[player.playerId].hp -= 10;
                         playersData[TankShots[i].id].hp += 10;
                         if (playersData[TankShots[i].id].hp > 100) playersData[TankShots[i].id].hp = 100;
@@ -274,7 +274,7 @@ function update() {
                         }
                         removeTankShot(i);
                     }
-                    if (TankShots[i].shotType == 'ETbullet' && playersData[player.playerId]) {
+                    if (TankShots[i].shotType == 'ETbullet' && playersData[player.playerId] && TankShots[i]) {
                         playersData[player.playerId].Istationary += EstunDuration;
                         playersData[player.playerId].lastMoved = 'stunned' + playersData[player.playerId].heroType;
                         if (playersData[player.playerId].InR) {
@@ -285,7 +285,7 @@ function update() {
 
                         removeTankShot(i);
                     }
-                    if (TankShots[i].shotType == 'RTbullet' && playersData[player.playerId]) {
+                    if (TankShots[i].shotType == 'RTbullet' && playersData[player.playerId] && TankShots[i]) {
                         playersData[player.playerId].hp -= 10;
 
                         if (playersData[player.playerId] < 10 && playersData[player.playerId].InR) {
