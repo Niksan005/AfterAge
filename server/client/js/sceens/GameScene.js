@@ -223,7 +223,7 @@ class GameScene extends Phaser.Scene {
 
                 self.physics.moveToObject(TankShots[TankShotsBR].ball, { x: TankShots[TankShotsBR].endX, y: TankShots[TankShotsBR].endY }, 400);
                 TankShots[TankShotsBR].ball.rotation = Phaser.Math.Angle.Between(startxy.x, startxy.y, endxy.x, endxy.y);
-                TankShots[TankShotsBR].anims.play(shotType + 'A', true);
+                TankShots[TankShotsBR].ball.anims.play(shotType + 'A', true);
                 TankShotsBR += 1;
             }
         });
