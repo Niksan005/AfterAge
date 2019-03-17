@@ -2,6 +2,9 @@
 import { CST } from '../CST.js';
 var layers = {}, Qs = [], QsBR = 0, ShouldListen = false;
 
+var TankShots = [];
+var TankShotsBR = 0;
+
 var leaderBID = [];
 leaderBID[0] = 0;
 leaderBID[1] = 0;
@@ -196,6 +199,32 @@ class GameScene extends Phaser.Scene {
                 Qs[QsBR].anims.play('Q', true);
                 self.physics.moveToObject(Qs[QsBR], { x: endxy.x, y: endxy.y }, 400);
                 QsBR += 1;
+            }
+        });
+        this.socket.on('removeQ', function (index) {
+            if (ShouldListen) {
+                if (Qs[index]) Qs[index].destroy();
+                for (var i = index; i < QsBR - 1; i += 1) {
+                    Qs[i] = Qs[i + 1];
+                }
+                QsBR -= 1;
+            }
+        });
+
+        this.socket.on('createTankShot', function (startxy, endxy, shotType) {
+            if (ShouldListen) {
+                TankShots[TankShotsBR] = {
+                    id: TankShotsBR,
+                    endX: endxy.x,
+                    endY: endxy.y,
+                    ball: self.physics.add.sprite(startxy.x, startxy.y, shotType).setOrigin(0.5, 0.5).setDisplaySize(32, 32),
+                    shotType: shotType
+                };
+
+                self.physics.moveToObject(TankShots[TankShotsBR].ball, { x: TankShots[TankShotsBR].endX, y: TankShots[TankShotsBR].endY }, 400);
+                TankShots[TankShotsBR].ball.rotation = Phaser.Math.Angle.Between(startxy.x, startxy.y, endxy.x, endxy.y);
+                TankShots[TankShotsBR].anims.play(shotType + 'A', true);
+                TankShotsBR += 1;
             }
         });
         this.socket.on('removeQ', function (index) {
@@ -531,6 +560,30 @@ class GameScene extends Phaser.Scene {
             frameRate: 12,
             repeat: -1
         });
+
+
+
+
+        self.anims.create({
+            key: 'QTbulletA',
+            frames: self.anims.generateFrameNumbers('QTbullet', { start: 0, end: 0 }),
+            frameRate: 1,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'WTbulletA',
+            frames: self.anims.generateFrameNumbers('WTbullet', { start: 0, end: 10 }),
+            frameRate: 24,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'ETbulletA',
+            frames: self.anims.generateFrameNumbers('ETbullet', { start: 0, end: 19 }),
+            frameRate: 24,
+            repeat: -1
+        });
+
+
     }
 }
 export { GameScene };

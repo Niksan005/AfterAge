@@ -13,8 +13,13 @@ const WizzRcd = 8000;
 const EstunDuration = 50;
 const rangeE = 200;
 
+const TankQcd = 100;
+
 var Qs = [];
 var QsBR = 0;
+
+var TankShots = [];
+var TankShotsBR = 0;
 
 const config = {
     type: Phaser.HEADLESS,
@@ -253,7 +258,7 @@ function addPlayer(self, playerInfo) {
     self.players.add(player);
     playersData[player.playerId].player = player;
     //self.physics.add.collider(player, layers);
-    if(playersData[player.playerId].heroType == 'Wizz') self.physics.add.collider(player, layers[1]);
+    if (playersData[player.playerId].heroType == 'Wizz') self.physics.add.collider(player, layers[1]);
     self.physics.add.collider(player, layers[2]);
     self.physics.add.collider(player, self.players, function (player1, player2) {
         if (playersData[player2.playerId] && playersData[player2.playerId].Istationary == 0 && playersData[player1.playerId].team != playersData[player2.playerId].team) newFunction(player1, self, player2);
@@ -384,6 +389,39 @@ function handleQWERpresses(self, id, playerInput) {
                 io.emit('cdChange', { id: id, skill: 'R', Ion: false });
             }
         }
+        if (playersData[id].heroType == 'Tank') {
+            if (playerInput.Q && playersData[id].Qcd <= 0 && playersData[id].Istationary == 0) {
+                console.log('Q pressed');
+                playersData[id].Qcd = TankQcd;
+                playersData[id].QstateSend = false;
+                io.emit('cdChange', { id: id, skill: 'Q', Ion: false });
+                var tempXY = getXYwithRange(player, playerInput, 500, true);
+                createTankShot(self, { x: playersData[id].x, y: playersData[id].y }, tempXY, id, 'QTbullet');
+            }
+            if (playerInput.W && playersData[id].Wcd <= 0) {
+                console.log('W pressed');
+                playersData[id].Wcd = WizzWcd;
+                playersData[id].WstateSend = false;
+                io.emit('cdChange', { id: id, skill: 'W', Ion: false });
+                var tempXY = getXYwithRange(player, playerInput, 500, true);
+                createTankShot(self, { x: playersData[id].x, y: playersData[id].y }, tempXY, id, 'WTbullet');
+            }
+            if (playerInput.E && playersData[id].Ecd <= 0 && playersData[id].Istationary == 0) {
+                console.log('E pressed');
+                playersData[id].Ecd = WizzEcd;
+                playersData[id].EstateSend = false;
+                io.emit('cdChange', { id: id, skill: 'E', Ion: false });
+                var tempXY = getXYwithRange(player, playerInput, 500, true);
+                createTankShot(self, { x: playersData[id].x, y: playersData[id].y }, tempXY, id, 'ETbullet');
+
+            }
+            if (playerInput.R && playersData[id].Rcd <= 0 && playersData[id].Istationary == 0) {
+                console.log('R pressed');
+                playersData[id].Rcd = WizzRcd;
+                playersData[id].RstateSend = false;
+                io.emit('cdChange', { id: id, skill: 'R', Ion: false });
+            }
+        }
     }
 }
 function createQ(self, beginXY, endXY, playerId) {
@@ -398,6 +436,8 @@ function createQ(self, beginXY, endXY, playerId) {
     io.emit('createQ', { x: beginXY.x, y: beginXY.y }, { x: endXY.x, y: endXY.y });
 
 }
+
+
 function removeQ(index) {
     Qs[index].ball.destroy();
     for (var i = index; i < QsBR - 1; i += 1) {
@@ -406,9 +446,33 @@ function removeQ(index) {
     QsBR--;
     io.emit('removeQ', index);
 }
+
+function createTankShot(self, beginXY, endXY, playerId, TankShot) {
+    TankShots[TankShotsBR] = {
+        id: playerId,
+        endX: endXY.x,
+        endY: endXY.y,
+        ball: self.physics.add.image(beginXY.x, beginXY.y, 'sprite').setOrigin(0.5, 0.5).setDisplaySize(32, 32),
+        shotType: TankShot
+    };
+    self.physics.moveToObject(TankShots[TankShotsBR].ball, { x: TankShots[TankShotsBR].endX, y: TankShots[TankShotsBR].endY }, 400);
+    TankShotsBR += 1;
+    io.emit('createTankShot', { x: beginXY.x, y: beginXY.y }, { x: endXY.x, y: endXY.y }, TankShot);
+}
+
+function removeTankShot(index) {
+    TankShots[index].ball.destroy();
+    for (var i = index; i < TankShotsBR - 1; i += 1) {
+        TankShots[i] = TankShots[i + 1];
+    }
+    TankShotsBR--;
+    io.emit('removeTankShot', index);
+}
+
 function resetMSpeed(player) {
     console.log('remove');
-    player.MSpeed = 100;
+    if (player)
+        player.MSpeed = 100;
 }
 function dealEdmg(self, id, wx, wy) {
     var player = playersData[id].player;
