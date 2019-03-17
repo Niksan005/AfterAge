@@ -232,7 +232,7 @@ function update() {
         this.players.getChildren().forEach((player) => {
             if (TankShots[i]) {
                 var x = TankShots[i].ball.x, y = TankShots[i].ball.y;
-                if (player.x > x - 25 && player.x < x + 25 && player.y > y - 25 && player.y < y + 25 && playersData[player.playerId] &&playersData[TankShots[i].id] && playersData[player.playerId].team != playersData[TankShots[i].id].team) {
+                if (player.x > x - 25 && player.x < x + 25 && player.y > y - 25 && player.y < y + 25 && playersData[player.playerId] && playersData[TankShots[i].id] && playersData[player.playerId].team != playersData[TankShots[i].id].team) {
                     console.log(TankShots[i].shotType);
                     if (TankShots[i].shotType == 'QTbullet') {
                         playersData[player.playerId].hp -= 20;
@@ -259,13 +259,14 @@ function update() {
                         removeTankShot(i);
                     }
                     if (TankShots[i].shotType == 'WTbullet') {
-                        playersData[player.playerId].hp -= 10;
-                        playersData[TankShots[i].id].hp += 10;
+                        playersData[player.playerId].hp -= 30;
+                        playersData[TankShots[i].id].hp += 30;
                         if (playersData[TankShots[i].id].hp > 100) playersData[TankShots[i].id].hp = 100;
                         if (playersData[player.playerId] < 10 && playersData[player.playerId].InR) {
                             playersData[player.playerId].hp = 10;
                         }
                         io.emit('updateHP', { playerId: player.playerId, hp: playersData[player.playerId].hp, team: playersData[player.playerId].team });
+                        io.emit('updateHP', { playerId: TankShots[i].id, hp: playersData[TankShots[i].id].hp, team: playersData[TankShots[i].id].team });
                         if (playersData[player.playerId].hp < 1 && !playersData[player.playerId].InR) {
                             io.emit('disconnect', player.playerId);
                             removePlayer(self, player.playerId);
@@ -293,7 +294,7 @@ function update() {
                         removeTankShot(i);
                     }
                     if (TankShots[i].shotType == 'RTbullet') {
-                        playersData[player.playerId].hp -= 10;
+                        playersData[player.playerId].hp -= 5;
 
                         if (playersData[player.playerId] < 10 && playersData[player.playerId].InR) {
                             playersData[player.playerId].hp = 10;
@@ -490,7 +491,7 @@ function handleQWERpresses(self, id, playerInput) {
             }
             if (playerInput.W && playersData[id].Wcd <= 0) {
                 console.log('W pressed');
-                playersData[id].Wcd = WizzWcd;
+                playersData[id].Wcd = WizzQcd;
                 playersData[id].WstateSend = false;
                 io.emit('cdChange', { id: id, skill: 'W', Ion: false });
                 var tempXY = getXYwithRange(player, playerInput, 500, true);
@@ -498,7 +499,7 @@ function handleQWERpresses(self, id, playerInput) {
             }
             if (playerInput.E && playersData[id].Ecd <= 0 && playersData[id].Istationary == 0) {
                 console.log('E pressed');
-                playersData[id].Ecd = WizzEcd;
+                playersData[id].Ecd = WizzQcd;
                 playersData[id].EstateSend = false;
                 io.emit('cdChange', { id: id, skill: 'E', Ion: false });
                 var tempXY = getXYwithRange(player, playerInput, 500, true);
@@ -507,7 +508,7 @@ function handleQWERpresses(self, id, playerInput) {
             }
             if (playerInput.R && playersData[id].Rcd <= 0 && playersData[id].Istationary == 0) {
                 console.log('R pressed');
-                playersData[id].Rcd = WizzRcd;
+                playersData[id].Rcd = 1875;
                 playersData[id].RstateSend = false;
                 io.emit('cdChange', { id: id, skill: 'R', Ion: false });
                 var tempXY = getXYwithRange(player, playerInput, 500, true);

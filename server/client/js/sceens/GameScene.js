@@ -39,7 +39,11 @@ class GameScene extends Phaser.Scene {
         this.input.mouse.disableContextMenu();
 
         this.drawLayers(self);
-        this.drawHUD(self);
+        if (this.HeroType == 'Wizz') {
+            this.drawHUDWizz(self);
+        } else {
+            this.drawHUDTank(self);
+        }
         this.setCamera(self);
 
 
@@ -234,6 +238,7 @@ class GameScene extends Phaser.Scene {
                         Qs[i] = Qs[i + 1];
                     }
                     QsBR -= 1;
+
                 }
             }
         });
@@ -262,42 +267,85 @@ class GameScene extends Phaser.Scene {
         this.socket.on('cdChange', function (InputData) {
 
             if (ShouldListen) {
-                if (self.myID != 0 && self.myID == InputData.id) {
-                    var skill = InputData.skill;
-                    if (skill == 'Q') {
-                        if (InputData.Ion) self.Qskill.anims.play('staticQ', true);
-                        else {
-                            self.Qskill.anims.play('oncd', true);
-                            setTimeout(() => {
-                                self.Qskill.anims.play('staticQ', true);
-                            }, 7000);
+                if (self.HeroType == 'Wizz') {
+                    if (self.myID != 0 && self.myID == InputData.id) {
+                        var skill = InputData.skill;
+                        if (skill == 'Q') {
+                            if (InputData.Ion) self.Qskill.anims.play('staticQ', true);
+                            else {
+                                self.Qskill.anims.play('oncd', true);
+                                setTimeout(() => {
+                                    self.Qskill.anims.play('staticQ', true);
+                                }, 7000);
+                            }
+                        }
+                        if (skill == 'W') {
+                            if (InputData.Ion) self.Wskill.anims.play('staticW', true);
+                            else {
+                                self.Wskill.anims.play('onLcd', true);
+                                setTimeout(() => {
+                                    self.Wskill.anims.play('staticW', true);
+                                }, 14000);
+                            }
+                        }
+                        if (skill == 'E') {
+                            if (InputData.Ion) self.Eskill.anims.play('staticE', true);
+                            else {
+                                self.Eskill.anims.play('oncd', true);
+                                setTimeout(() => {
+                                    self.Eskill.anims.play('staticE', true);
+                                }, 7000);
+                            }
+                        }
+                        if (skill == 'R') {
+                            if (InputData.Ion) self.Rskill.anims.play('staticRskill', true);
+                            else {
+                                self.Rskill.anims.play('onLLcd', true);
+                                setTimeout(() => {
+                                    self.Rskill.anims.play('staticRskill', true);
+                                }, 140000);
+                            }
                         }
                     }
-                    if (skill == 'W') {
-                        if (InputData.Ion) self.Wskill.anims.play('staticW', true);
-                        else {
-                            self.Wskill.anims.play('onLcd', true);
-                            setTimeout(() => {
-                                self.Wskill.anims.play('staticW', true);
-                            }, 14000);
+                } else {
+                    console.log('Tank HUD');
+                    if (self.myID != 0 && self.myID == InputData.id) {
+                        var skill = InputData.skill;
+                        if (skill == 'Q') {
+                            if (InputData.Ion) self.Qskill.anims.play('staticQTank', true);
+                            else {
+                                self.Qskill.anims.play('oncd100', true);
+                                setTimeout(() => {
+                                    self.Qskill.anims.play('staticQTank', true);
+                                }, 7000);
+                            }
                         }
-                    }
-                    if (skill == 'E') {
-                        if (InputData.Ion) self.Eskill.anims.play('staticE', true);
-                        else {
-                            self.Eskill.anims.play('oncd', true);
-                            setTimeout(() => {
-                                self.Eskill.anims.play('staticE', true);
-                            }, 7000);
+                        if (skill == 'W') {
+                            if (InputData.Ion) self.Wskill.anims.play('staticWTank', true);
+                            else {
+                                self.Wskill.anims.play('oncd', true);
+                                setTimeout(() => {
+                                    self.Wskill.anims.play('staticWTank', true);
+                                }, 14000);
+                            }
                         }
-                    }
-                    if (skill == 'R') {
-                        if (InputData.Ion) self.Rskill.anims.play('staticRskill', true);
-                        else {
-                            self.Rskill.anims.play('onLLcd', true);
-                            setTimeout(() => {
-                                self.Rskill.anims.play('staticRskill', true);
-                            }, 140000);
+                        if (skill == 'E') {
+                            if (InputData.Ion) self.Eskill.anims.play('staticEWTank', true);
+                            else {
+                                self.Eskill.anims.play('oncd', true);
+                                setTimeout(() => {
+                                    self.Eskill.anims.play('staticETank', true);
+                                }, 7000);
+                            }
+                        }
+                        if (skill == 'R') {
+                            if (InputData.Ion) self.Rskill.anims.play('staticRskillWTank', true);
+                            else {
+                                self.Rskill.anims.play('oncd3_5', true);
+                                setTimeout(() => {
+                                    self.Rskill.anims.play('staticRWTank', true);
+                                }, 140000);
+                            }
                         }
                     }
                 }
@@ -364,12 +412,22 @@ class GameScene extends Phaser.Scene {
 
 
     }
-    drawHUD(self) {
+    drawHUDWizz(self) {
         self.hud = self.add.image(138, 576 - 36, 'hud').setScrollFactor(0).setDisplaySize(138 * 2, 36 * 2);
         self.Qskill = self.add.sprite(36 + 0 * 67, 540, 'Qskill').setScrollFactor(0).setDisplaySize(64, 64);
         self.Wskill = self.add.sprite(36 + 1 * 67, 540, 'Wskill').setScrollFactor(0).setDisplaySize(64, 64);
         self.Eskill = self.add.sprite(36 + 2 * 67, 540, 'Eskill').setScrollFactor(0).setDisplaySize(64, 64);
         self.Rskill = self.add.sprite(36 + 3 * 67, 540, 'Rskill').setScrollFactor(0).setDisplaySize(64, 64);
+
+    }
+
+
+    drawHUDTank(self) {
+        self.hud = self.add.image(138, 576 - 36, 'hudTank').setScrollFactor(0).setDisplaySize(138 * 2, 36 * 2);
+        self.Qskill = self.add.sprite(36 + 0 * 67, 540, 'QTankskill').setScrollFactor(0).setDisplaySize(64, 64);
+        self.Wskill = self.add.sprite(36 + 1 * 67, 540, 'WTankskill').setScrollFactor(0).setDisplaySize(64, 64);
+        self.Eskill = self.add.sprite(36 + 2 * 67, 540, 'ETankskill').setScrollFactor(0).setDisplaySize(64, 64);
+        self.Rskill = self.add.sprite(36 + 3 * 67, 540, 'RTankskill').setScrollFactor(0).setDisplaySize(64, 64);
 
     }
     setCamera(self) {
@@ -491,6 +549,18 @@ class GameScene extends Phaser.Scene {
             repeat: -1
         });
         self.anims.create({
+            key: 'oncd3_5',
+            frames: self.anims.generateFrameNumbers('cd', { start: 0, end: 24 }),
+            frameRate: 3.25 / 4,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'oncd100',
+            frames: self.anims.generateFrameNumbers('cd', { start: 0, end: 24 }),
+            frameRate: 3.5 * 4,
+            repeat: -1
+        });
+        self.anims.create({
             key: 'onLcd',
             frames: self.anims.generateFrameNumbers('cd', { start: 0, end: 24 }),
             frameRate: 1.75,
@@ -587,6 +657,37 @@ class GameScene extends Phaser.Scene {
             key: 'RTbulletA',
             frames: self.anims.generateFrameNumbers('RTbullet', { start: 0, end: 1 }),
             frameRate: 24,
+            repeat: -1
+        });
+
+
+
+
+        self.anims.create({
+            key: 'staticQTank',
+            frames: self.anims.generateFrameNumbers('QTankskill', { start: 0, end: 0 }),
+            frameRate: 1,
+            repeat: -1
+        });
+
+        self.anims.create({
+            key: 'staticWTank',
+            frames: self.anims.generateFrameNumbers('WTankskill', { start: 0, end: 0 }),
+            frameRate: 1,
+            repeat: -1
+        });
+
+
+        self.anims.create({
+            key: 'staticETank',
+            frames: self.anims.generateFrameNumbers('ETankskill', { start: 0, end: 0 }),
+            frameRate: 1,
+            repeat: -1
+        });
+        self.anims.create({
+            key: 'staticRTank',
+            frames: self.anims.generateFrameNumbers('RTankskill', { start: 0, end: 0 }),
+            frameRate: 1,
             repeat: -1
         });
 
