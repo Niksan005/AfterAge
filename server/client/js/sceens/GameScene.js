@@ -310,7 +310,6 @@ class GameScene extends Phaser.Scene {
                         }
                     }
                 } else {
-                    console.log('Tank HUD');
                     if (self.myID != 0 && self.myID == InputData.id) {
                         var skill = InputData.skill;
                         if (skill == 'Q') {
