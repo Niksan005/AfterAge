@@ -228,11 +228,13 @@ class GameScene extends Phaser.Scene {
         });
         this.socket.on('removeQ', function (index) {
             if (ShouldListen) {
-                if (Qs[index]) Qs[index].destroy();
-                for (var i = index; i < QsBR - 1; i += 1) {
-                    Qs[i] = Qs[i + 1];
+                if (Qs[index]) {
+                    Qs[index].destroy();
+                    for (var i = index; i < QsBR - 1; i += 1) {
+                        Qs[i] = Qs[i + 1];
+                    }
+                    QsBR -= 1;
                 }
-                QsBR -= 1;
             }
         });
         this.socket.on('Exy', function (x, y) {
