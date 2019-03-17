@@ -77,7 +77,9 @@ class GameScene extends Phaser.Scene {
                     if (playerId === player.playerId && player.playerId == self.myID) {
                         ShouldListen = false;
                         self.socket.disconnect();
-                        self.scene.start(CST.SCENES.LOAD, { Name: self.Name, HeroType: self.HeroType, team: self.team, IMobile: self.IMobile });//, self.HeroType, self.Name, self.IMobile);
+                        setTimeout(() => {
+                            self.scene.start(CST.SCENES.LOAD, { Name: self.Name, HeroType: self.HeroType, team: self.team, IMobile: self.IMobile });//, self.HeroType, self.Name, self.IMobile);
+                        }, 5000); 
                         return;
                     }
                     if (playerId === player.playerId) {
