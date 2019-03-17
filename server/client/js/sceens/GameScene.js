@@ -35,6 +35,8 @@ class GameScene extends Phaser.Scene {
         this.players = this.add.group();
         this.name = this.add.group();
         this.myID = 0;
+        this.oldx = 0;
+        this.oldy = 0;
 
         this.input.mouse.disableContextMenu();
 
@@ -371,6 +373,8 @@ class GameScene extends Phaser.Scene {
         };
 
         this.input.on('pointerdown', function () {
+            this.oldx = this.pointerAndKeys.x;
+            this.oldy = this.pointerAndKeys.y;
             this.pointerAndKeys.x = this.input.activePointer.x + this.cameras.main.scrollX;
             this.pointerAndKeys.y = this.input.activePointer.y + this.cameras.main.scrollY;
             //console.log('pointerdown ' + this.pointerAndKeys.x + ' : ' + this.pointerAndKeys.y);
@@ -402,6 +406,24 @@ class GameScene extends Phaser.Scene {
 
     }
 
+    keyISdown(self, key) {
+        self.pointerAndKeys = {
+            'x': self.oldx,
+            'y': self.ildy,
+            'Q': self.keyQ.isDown,
+            'W': self.keyW.isDown,
+            'E': self.keyE.isDown,
+            'R': self.keyR.isDown
+        };
+
+        if (key == 'Q') { self.pointerAndKeys.Q = true; }
+        if (key == 'W') { self.pointerAndKeys.W = true; }
+        if (key == 'E') { self.pointerAndKeys.E = true; }
+        if (key == 'R') { self.pointerAndKeys.R = true; }
+        self.socket.emit('pressedQWER', self.pointerAndKeys);
+
+    }
+
     drawLayers(self) {
         self.map = self.make.tilemap({ key: 'map' });
         var tileset = self.map.addTilesetImage('tileset4', 'tileset');
@@ -414,20 +436,36 @@ class GameScene extends Phaser.Scene {
     }
     drawHUDWizz(self) {
         self.hud = self.add.image(138, 576 - 36, 'hud').setScrollFactor(0).setDisplaySize(138 * 2, 36 * 2);
-        self.Qskill = self.add.sprite(36 + 0 * 67, 540, 'Qskill').setScrollFactor(0).setDisplaySize(64, 64);
-        self.Wskill = self.add.sprite(36 + 1 * 67, 540, 'Wskill').setScrollFactor(0).setDisplaySize(64, 64);
-        self.Eskill = self.add.sprite(36 + 2 * 67, 540, 'Eskill').setScrollFactor(0).setDisplaySize(64, 64);
-        self.Rskill = self.add.sprite(36 + 3 * 67, 540, 'Rskill').setScrollFactor(0).setDisplaySize(64, 64);
+        self.Qskill = self.add.sprite(36 + 0 * 67, 540, 'Qskill').setScrollFactor(0).setDisplaySize(64, 64)
+            .setInteractive()
+            .on('pointerdown', () => this.keyISdown(self, 'Q'));
+        self.Wskill = self.add.sprite(36 + 1 * 67, 540, 'Wskill').setScrollFactor(0).setDisplaySize(64, 64)
+            .setInteractive()
+            .on('pointerdown', () => this.keyISdown(self, 'W'));
+        self.Eskill = self.add.sprite(36 + 2 * 67, 540, 'Eskill').setScrollFactor(0).setDisplaySize(64, 64)
+            .setInteractive()
+            .on('pointerdown', () => this.keyISdown(self, 'E'));
+        self.Rskill = self.add.sprite(36 + 3 * 67, 540, 'Rskill').setScrollFactor(0).setDisplaySize(64, 64)
+            .setInteractive()
+            .on('pointerdown', () => this.keyISdown(self, 'R'));
 
     }
 
 
     drawHUDTank(self) {
         self.hud = self.add.image(138, 576 - 36, 'hudTank').setScrollFactor(0).setDisplaySize(138 * 2, 36 * 2);
-        self.Qskill = self.add.sprite(36 + 0 * 67, 540, 'QTankskill').setScrollFactor(0).setDisplaySize(64, 64);
-        self.Wskill = self.add.sprite(36 + 1 * 67, 540, 'WTankskill').setScrollFactor(0).setDisplaySize(64, 64);
-        self.Eskill = self.add.sprite(36 + 2 * 67, 540, 'ETankskill').setScrollFactor(0).setDisplaySize(64, 64);
-        self.Rskill = self.add.sprite(36 + 3 * 67, 540, 'RTankskill').setScrollFactor(0).setDisplaySize(64, 64);
+        self.Qskill = self.add.sprite(36 + 0 * 67, 540, 'QTankskill').setScrollFactor(0).setDisplaySize(64, 64)
+            .setInteractive()
+            .on('pointerdown', () => this.keyISdown(self, 'Q'));;
+        self.Wskill = self.add.sprite(36 + 1 * 67, 540, 'WTankskill').setScrollFactor(0).setDisplaySize(64, 64)
+            .setInteractive()
+            .on('pointerdown', () => this.keyISdown(self, 'W'));;
+        self.Eskill = self.add.sprite(36 + 2 * 67, 540, 'ETankskill').setScrollFactor(0).setDisplaySize(64, 64)
+            .setInteractive()
+            .on('pointerdown', () => this.keyISdown(self, 'E'));;
+        self.Rskill = self.add.sprite(36 + 3 * 67, 540, 'RTankskill').setScrollFactor(0).setDisplaySize(64, 64)
+            .setInteractive()
+            .on('pointerdown', () => this.keyISdown(self, 'R'));;
 
     }
     setCamera(self) {
