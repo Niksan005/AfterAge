@@ -23,7 +23,6 @@ class GameScene extends Phaser.Scene {
         this.Name = a.Name;
         this.IMobile = a.IMobile;
         this.team = a.team;
-        console.log(a);
     }
 
     create() {
@@ -31,7 +30,6 @@ class GameScene extends Phaser.Scene {
         this.animsa(self);
         ShouldListen = true;
         this.socket = io();
-        console.log(this.HeroType);
         this.socket.emit('createPlayer', this.Name, this.HeroType, this.team);
 
         this.players = this.add.group();
@@ -79,7 +77,7 @@ class GameScene extends Phaser.Scene {
                         self.socket.disconnect();
                         setTimeout(() => {
                             self.scene.start(CST.SCENES.LOAD, { Name: self.Name, HeroType: self.HeroType, team: self.team, IMobile: self.IMobile });//, self.HeroType, self.Name, self.IMobile);
-                        }, 5000); 
+                        }, 5000);
                         return;
                     }
                     if (playerId === player.playerId) {
@@ -103,7 +101,6 @@ class GameScene extends Phaser.Scene {
 
                         if (player.anims.currentAnim.key != players[id].lastMoved) {
                             player.anims.play(players[id].lastMoved);
-                            console.log(players[id].lastMoved);
                         }
                     };
                 });
@@ -383,7 +380,6 @@ class GameScene extends Phaser.Scene {
 
         const player = self.add.sprite(playerInfo.x, playerInfo.y, sprite).setOrigin(0.5, 0.5).setDisplaySize(50, 50);
         player.playerId = playerInfo.playerId;
-        console.log('static' + playerInfo.heroType);
         player.anims.play('static' + playerInfo.heroType);
         player.nameText = self.add.text(playerInfo.x - 25, playerInfo.y - 30, playerInfo.name, { fontSize: '10px', fill: '#000', fontWeight: 'bold' });
         player.Name = playerInfo.name;
