@@ -230,9 +230,10 @@ function update() {
     }
     for (var i = 0; i < TankShotsBR; i += 1) {
         this.players.getChildren().forEach((player) => {
-            if (TankShots[i] && playersData[player.playerId]) {
+            if (TankShots[i]) {
                 var x = TankShots[i].ball.x, y = TankShots[i].ball.y;
-                if (player.x > x - 25 && player.x < x + 25 && player.y > y - 25 && player.y < y + 25 &&  playersData[player.playerId].team != playersData[TankShots[i].id].team) {
+                if (player.x > x - 25 && player.x < x + 25 && player.y > y - 25 && player.y < y + 25  && playersData[player.playerId].team != playersData[TankShots[i].id].team) {
+                    console.log(TankShots[i].shotType);
                     if (TankShots[i].shotType == 'QTbullet') {
                         playersData[player.playerId].hp -= 20;
 
@@ -245,6 +246,12 @@ function update() {
                             removePlayer(self, player.playerId);
                             delete playersData[player.playerId];
                             delete XY[player.playerId];
+
+                            for (var j = 0; j < TankShotsBR; j += 1) {
+                                if (player.playerId == TankShots[j].id) {
+                                    removeTankShot(j);
+                                }
+                            }
 
                             playersData[TankShots[i].id].kills++;
 
@@ -267,6 +274,12 @@ function update() {
                             delete playersData[player.playerId];
                             delete XY[player.playerId];
 
+
+                            for (var j = 0; j < TankShotsBR; j += 1) {
+                                if (player.playerId == TankShots[j].id) {
+                                    removeTankShot(j);
+                                }
+                            }
                             playersData[TankShots[i].id].kills++;
 
                             XY[TankShots[i].id].kills = playersData[TankShots[i].id].kills;
@@ -298,6 +311,12 @@ function update() {
                             delete playersData[player.playerId];
                             delete XY[player.playerId];
 
+
+                            for (var j = 0; j < TankShotsBR; j += 1) {
+                                if (player.playerId == TankShots[j].id) {
+                                    removeTankShot(j);
+                                }
+                            }
                             playersData[TankShots[i].id].kills++;
 
                             XY[TankShots[i].id].kills = playersData[TankShots[i].id].kills;
