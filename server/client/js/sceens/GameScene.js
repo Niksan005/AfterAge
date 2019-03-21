@@ -396,6 +396,10 @@ class GameScene extends Phaser.Scene {
 
 
                 this.socket.emit('movePlayer', this.pointerAndKeys);
+                this.pointerAndKeys.Q = false;
+                this.pointerAndKeys.W = false;
+                this.pointerAndKeys.E = false;
+                this.pointerAndKeys.R = false;
             }
             console.log(this.pointerAndKeys)
         }, this);
