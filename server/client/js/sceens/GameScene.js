@@ -424,6 +424,10 @@ class GameScene extends Phaser.Scene {
 
 
             this.socket.emit('pressedQWER', this.pointerAndKeys);
+            this.pointerAndKeys.Q = false;
+            this.pointerAndKeys.W = false;
+            this.pointerAndKeys.E = false;
+            this.pointerAndKeys.R = false;
         }
 
 
