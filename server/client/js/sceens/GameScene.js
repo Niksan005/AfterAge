@@ -35,8 +35,10 @@ class GameScene extends Phaser.Scene {
         this.players = this.add.group();
         this.name = this.add.group();
         this.myID = 0;
-        this.oldx = 0;
-        this.oldy = 0;
+        this.QisDown = false;
+        this.WisDown = false;
+        this.EisDown = false;
+        this.RisDown = false;
 
         this.input.mouse.disableContextMenu();
 
@@ -373,11 +375,13 @@ class GameScene extends Phaser.Scene {
         };
 
         this.input.on('pointerdown', function () {
-            this.oldx = this.pointerAndKeys.x;
-            this.oldy = this.pointerAndKeys.y;
             this.pointerAndKeys.x = this.input.activePointer.x + this.cameras.main.scrollX;
             this.pointerAndKeys.y = this.input.activePointer.y + this.cameras.main.scrollY;
             //console.log('pointerdown ' + this.pointerAndKeys.x + ' : ' + this.pointerAndKeys.y);
+            if (this.QisDown) { this.pointerAndKeys.Q = true; this.QisDown = false; }
+            if (this.WisDown) { this.pointerAndKeys.W = true; this.WisDown = false; }
+            if (this.EisDown) { this.pointerAndKeys.E = true; this.eisDown = false; }
+            if (this.RisDown) { this.pointerAndKeys.R = true; this.RisDown = false; }
             this.socket.emit('movePlayer', this.pointerAndKeys);
         }, this);
 
@@ -407,20 +411,10 @@ class GameScene extends Phaser.Scene {
     }
 
     keyISdown(self, key) {
-        self.pointerAndKeys = {
-            'x': self.oldx,
-            'y': self.ildy,
-            'Q': self.keyQ.isDown,
-            'W': self.keyW.isDown,
-            'E': self.keyE.isDown,
-            'R': self.keyR.isDown
-        };
-
-        if (key == 'Q') { self.pointerAndKeys.Q = true; }
-        if (key == 'W') { self.pointerAndKeys.W = true; }
-        if (key == 'E') { self.pointerAndKeys.E = true; }
-        if (key == 'R') { self.pointerAndKeys.R = true; }
-        self.socket.emit('pressedQWER', self.pointerAndKeys);
+        this.QisDown = true;
+        this.WisDown = true;
+        this.EisDown = true;
+        this.RisDown = true;
 
     }
 
