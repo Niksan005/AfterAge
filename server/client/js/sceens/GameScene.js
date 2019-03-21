@@ -422,10 +422,10 @@ class GameScene extends Phaser.Scene {
             if (this.EisDown && this.ButtClick) { this.pointerAndKeys.E = true; this.EisDown = false; }
             if (this.RisDown && this.ButtClick) { this.pointerAndKeys.R = true; this.RisDown = false; }
 
-            this.ButtClick = false;
 
             this.socket.emit('pressedQWER', this.pointerAndKeys);
         }
+
 
         this.ButtClick = false;
 

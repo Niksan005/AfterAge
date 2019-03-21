@@ -50,10 +50,10 @@ class LoadScene extends Phaser.Scene {
         this.load.spritesheet('Rskill', 'assets/sprites/Rskill.png', { frameWidth: 32, frameHeight: 32 });
 
         this.load.image('hudTank', 'assets/sprites/USED_HUD_FERRUM.png');
-        this.load.spritesheet('QTankskill', 'assets/sprites/QTankskill.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('WTankskill', 'assets/sprites/WTankskill.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('ETankskill', 'assets/sprites/ETankskill.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('RTankskill', 'assets/sprites/RTankskill.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('QTankskill', 'assets/sprites/QTankSkill.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('WTankskill', 'assets/sprites/WTankSkill.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('ETankskill', 'assets/sprites/ETankSkill.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('RTankskill', 'assets/sprites/RTankSkill.png', { frameWidth: 32, frameHeight: 32 });
 
         this.load.spritesheet('QTbullet', 'assets/sprites/bullet.png', { frameWidth: 64, frameHeight: 32 });
         this.load.spritesheet('QTdeadAnims', 'assets/sprites/bulletDeath.png', { frameWidth: 64, frameHeight: 32 });
