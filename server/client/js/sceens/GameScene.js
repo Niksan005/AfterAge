@@ -39,6 +39,8 @@ class GameScene extends Phaser.Scene {
         this.WisDown = false;
         this.EisDown = false;
         this.RisDown = false;
+        this.BittClick = false;
+
 
         this.input.mouse.disableContextMenu();
 
@@ -375,14 +377,20 @@ class GameScene extends Phaser.Scene {
         };
 
         this.input.on('pointerdown', function () {
-            this.pointerAndKeys.x = this.input.activePointer.x + this.cameras.main.scrollX;
-            this.pointerAndKeys.y = this.input.activePointer.y + this.cameras.main.scrollY;
+            if (this.ButtClick == false) {
+                this.pointerAndKeys.x = this.input.activePointer.x + this.cameras.main.scrollX;
+                this.pointerAndKeys.y = this.input.activePointer.y + this.cameras.main.scrollY;
+            }
+            this.ButtClick = false;
             //console.log('pointerdown ' + this.pointerAndKeys.x + ' : ' + this.pointerAndKeys.y);
-            if (this.QisDown) { this.pointerAndKeys.Q = true; this.QisDown = false; }
-            if (this.WisDown) { this.pointerAndKeys.W = true; this.WisDown = false; }
-            if (this.EisDown) { this.pointerAndKeys.E = true; this.eisDown = false; }
-            if (this.RisDown) { this.pointerAndKeys.R = true; this.RisDown = false; }
+            if (this.QisDown && this.ButtClick) { this.pointerAndKeys.Q = true; this.QisDown = false; }
+            if (this.WisDown && this.ButtClick) { this.pointerAndKeys.W = true; this.WisDown = false; }
+            if (this.EisDown && this.ButtClick) { this.pointerAndKeys.E = true; this.EisDown = false; }
+            if (this.RisDown && this.ButtClick) { this.pointerAndKeys.R = true; this.RisDown = false; }
+
+
             this.socket.emit('movePlayer', this.pointerAndKeys);
+            console.log(this.pointerAndKeys)
         }, this);
 
     }
@@ -415,7 +423,7 @@ class GameScene extends Phaser.Scene {
         this.WisDown = true;
         this.EisDown = true;
         this.RisDown = true;
-
+        this.ButtClick = true;
     }
 
     drawLayers(self) {
