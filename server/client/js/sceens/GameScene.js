@@ -39,7 +39,7 @@ class GameScene extends Phaser.Scene {
         this.WisDown = false;
         this.EisDown = false;
         this.RisDown = false;
-        this.BittClick = false;
+        this.ButtClick = false;
 
 
         this.input.mouse.disableContextMenu();
@@ -377,19 +377,26 @@ class GameScene extends Phaser.Scene {
         };
 
         this.input.on('pointerdown', function () {
-            if (this.ButtClick == false) {
-                this.pointerAndKeys.x = this.input.activePointer.x + this.cameras.main.scrollX;
-                this.pointerAndKeys.y = this.input.activePointer.y + this.cameras.main.scrollY;
+            console.log(this.ButtClick);
+            if (!this.ButtClick) {
+                this.pointerAndKeys = {
+                    'x': this.input.activePointer.x + this.cameras.main.scrollX,
+                    'y': this.input.activePointer.y + this.cameras.main.scrollY,
+                    'Q': this.keyQ.isDown || this.QisDown,
+                    'W': this.keyW.isDown || this.WisDown,
+                    'E': this.keyE.isDown || this.EisDown,
+                    'R': this.keyR.isDown || this.RisDown
+                };
+                if (this.QisDown && this.ButtClick) { this.pointerAndKeys.Q = true; this.QisDown = false; }
+                if (this.WisDown && this.ButtClick) { this.pointerAndKeys.W = true; this.WisDown = false; }
+                if (this.EisDown && this.ButtClick) { this.pointerAndKeys.E = true; this.EisDown = false; }
+                if (this.RisDown && this.ButtClick) { this.pointerAndKeys.R = true; this.RisDown = false; }
+
+                this.ButtClick = false;
+
+
+                this.socket.emit('movePlayer', this.pointerAndKeys);
             }
-            this.ButtClick = false;
-            //console.log('pointerdown ' + this.pointerAndKeys.x + ' : ' + this.pointerAndKeys.y);
-            if (this.QisDown && this.ButtClick) { this.pointerAndKeys.Q = true; this.QisDown = false; }
-            if (this.WisDown && this.ButtClick) { this.pointerAndKeys.W = true; this.WisDown = false; }
-            if (this.EisDown && this.ButtClick) { this.pointerAndKeys.E = true; this.EisDown = false; }
-            if (this.RisDown && this.ButtClick) { this.pointerAndKeys.R = true; this.RisDown = false; }
-
-
-            this.socket.emit('movePlayer', this.pointerAndKeys);
             console.log(this.pointerAndKeys)
         }, this);
 
@@ -403,13 +410,25 @@ class GameScene extends Phaser.Scene {
             this.pointerAndKeys = {
                 'x': this.input.activePointer.x + this.cameras.main.scrollX,
                 'y': this.input.activePointer.y + this.cameras.main.scrollY,
-                'Q': this.keyQ.isDown,
-                'W': this.keyW.isDown,
-                'E': this.keyE.isDown,
-                'R': this.keyR.isDown
+                'Q': this.keyQ.isDown || this.QisDown,
+                'W': this.keyW.isDown || this.WisDown,
+                'E': this.keyE.isDown || this.EisDown,
+                'R': this.keyR.isDown || this.RisDown
             };
+
+            //console.log('pointerdown ' + this.pointerAndKeys.x + ' : ' + this.pointerAndKeys.y);
+            if (this.QisDown && this.ButtClick) { this.pointerAndKeys.Q = true; this.QisDown = false; }
+            if (this.WisDown && this.ButtClick) { this.pointerAndKeys.W = true; this.WisDown = false; }
+            if (this.EisDown && this.ButtClick) { this.pointerAndKeys.E = true; this.EisDown = false; }
+            if (this.RisDown && this.ButtClick) { this.pointerAndKeys.R = true; this.RisDown = false; }
+
+            this.ButtClick = false;
+
             this.socket.emit('pressedQWER', this.pointerAndKeys);
         }
+
+        this.ButtClick = false;
+
         /// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-
         /// UPDATE XXXXXX UPDATE XXXXXX UPDATE XXXXXX UPDATE XXXXXX UPDATE XXXXXX UPDATE XXXXXX UPDATE XXXXXX UPDATE XXXXXX UPDATE XXXXXX UPDATE
         /// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-
@@ -419,10 +438,10 @@ class GameScene extends Phaser.Scene {
     }
 
     keyISdown(self, key) {
-        this.QisDown = true;
-        this.WisDown = true;
-        this.EisDown = true;
-        this.RisDown = true;
+        if (key == 'Q') this.QisDown = true;
+        if (key == 'W') this.WisDown = true;
+        if (key == 'E') this.EisDown = true;
+        if (key == 'R') this.RisDown = true;
         this.ButtClick = true;
     }
 
